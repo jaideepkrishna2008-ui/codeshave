@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeShave Playground — Instant AST Code Skeletonizer</title>
+  <link rel="icon" href="https://fav.farm/⚡" />
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --accent: #38bdf8;
+      --accent-glow: #6366f1;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --green: #34d399;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .brand span {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .btn-github {
+      background: #1f2937;
+      color: #fff;
+      border-color: #374151;
+    }
+    .btn-github:hover { background: #374151; }
+    .btn-coffee {
+      background: #f59e0b;
+      color: #000;
+      font-weight: 700;
+    }
+    .btn-coffee:hover { background: #d97706; }
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 0.75rem;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .container {
+      max-width: 1350px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .editor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      flex: 1;
+      min-height: 480px;
+    }
+    @media (max-width: 860px) {
+      .editor-grid { grid-template-columns: 1fr; }
+    }
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 0.75rem 1.25rem;
+      background: #161f30;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .badge-stat {
+      color: var(--green);
+      background: rgba(52, 211, 153, 0.15);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+    textarea {
+      flex: 1;
+      width: 100%;
+      background: transparent;
+      color: #e2e8f0;
+      border: none;
+      padding: 1.25rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+      white-space: pre;
+    }
+    .btn-copy {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .btn-copy:hover { background: #1d4ed8; }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      ⚡ Code<span>Shave</span>
+    </div>
+    <div class="nav-links">
+      <a href="https://github.com/jaideepkrishna2008-ui/codeshave" target="_blank" class="btn btn-github">
+        ⭐ Star on GitHub
+      </a>
+      <a href="https://buymeacoffee.com/jaideep.360" target="_blank" class="btn btn-coffee">
+        ☕ Buy Me A Coffee
+      </a>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>Shave 80% of Tokens in Real Time</h1>
+    <p>Paste your Python code below. CodeShave strips internal logic while retaining 100% syntactically valid classes, methods, docstrings, and type hints.</p>
+  </div>
+
+  <div class="container">
+    <div class="editor-grid">
+      <!-- Input Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <span>ORIGINAL PYTHON SOURCE</span>
+          <span id="input-stats">0 tokens</span>
+        </div>
+        <textarea id="input-code" spellcheck="false" placeholder="Paste your Python source code here..."></textarea>
+      </div>
+
+      <!-- Output Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <span>SHAVED SKELETON (FOR LLM PROMPT)</span>
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <span id="output-stats" class="badge-stat">0 tokens saved</span>
+            <button id="copy-btn" class="btn-copy">Copy Skeleton</button>
+          </div>
+        </div>
+        <textarea id="output-code" spellcheck="false" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Created by <b>Jaideep Krishna A</b> (@jaideepkrishna2008-ui) • Powered by Python AST Compression
+  </footer>
+
+  <script>
+    const SAMPLE_CODE = `"""
+Example payment and user persistence microservice.
+"""
+from typing import List, Optional
+from dataclasses import dataclass
+
+@dataclass
+class UserAccount:
+    """Represents a validated platform account."""
+    user_id: int
+    email: str
+    is_active: bool = True
+
+class PaymentGateway:
+    """Handles external payment processing and webhooks."""
+
+    def __init__(self, api_key: str, sandbox_mode: bool = False):
+        self.api_key = api_key
+        self.sandbox_mode = sandbox_mode
+
+    def process_charge(self, customer_id: int, amount_usd: float) -> bool:
+        """Charges customer account balance."""
+        print(f"Connecting to bank network for customer {customer_id}...")
+        fee = amount_usd * 0.029 + 0.30
+        print(f"Applying transaction fee: {fee}")
+        return True
+
+    async def list_historical_transactions(self, limit: int = 50) -> List[dict]:
+        """Fetches ledger transactions."""
+        records = []
+        for i in range(limit):
+            records.append({"tx_id": i, "status": "completed"})
+        return records
+`;
+
+    const inputArea = document.getElementById('input-code');
+    const outputArea = document.getElementById('output-code');
+    const inputStats = document.getElementById('input-stats');
+    const outputStats = document.getElementById('output-stats');
+    const copyBtn = document.getElementById('copy-btn');
+
+    inputArea.value = SAMPLE_CODE;
+
+    function estimateTokens(text) {
+      if (!text) return 0;
+      return Math.max(1, Math.round(text.length / 3.7));
+    }
+
+    // Client-side lightweight Python skeletonizer for web demo
+    function shaveCode(source) {
+      const lines = source.split('\\n');
+      let result = [];
+      let inDocstring = false;
+      let docstringQuote = '';
+      let skippingBody = false;
+      let currentIndent = 0;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        // Preserve empty lines and imports
+        if (!trimmed || trimmed.startsWith('import ') || trimmed.startsWith('from ')) {
+          result.push(line);
+          skippingBody = false;
+          continue;
+        }
+
+        // Preserve decorators and class definitions
+        if (trimmed.startsWith('@') || trimmed.startsWith('class ')) {
+          result.push(line);
+          skippingBody = false;
+          continue;
+        }
+
+        // Function definition
+        if (trimmed.startsWith('def ') || trimmed.startsWith('async def ')) {
+          result.push(line);
+          skippingBody = true;
+          currentIndent = line.search(/\\S/);
+          
+          // Peek next line for docstring
+          let nextIdx = i + 1;
+          let hasDoc = false;
+          while (nextIdx < lines.length) {
+            const nextTrimmed = lines[nextIdx].trim();
+            if (nextTrimmed.startsWith('"""') || nextTrimmed.startsWith("'''")) {
+              hasDoc = true;
+              break;
+            } else if (nextTrimmed) {
+              break;
+            }
+            nextIdx++;
+          }
+
+          if (!hasDoc) {
+            result.push(' '.repeat(currentIndent + 4) + '...');
+          }
+          continue;
+        }
+
+        // Docstring handling inside function
+        if (skippingBody) {
+          const indent = line.search(/\\S/);
+          if (trimmed.startsWith('"""') || trimmed.startsWith("'''")) {
+            result.push(line);
+            if (trimmed.length > 3 && (trimmed.endsWith('"""') || trimmed.endsWith("'''"))) {
+              result.push(' '.repeat(indent) + '...');
+              skippingBody = false;
+            }
+            continue;
+          }
+          if (indent <= currentIndent) {
+            skippingBody = false;
+            result.push(line);
+          }
+          continue;
+        }
+
+        result.push(line);
+      }
+
+      return result.join('\\n');
+    }
+
+    function update() {
+      const code = inputArea.value;
+      const origTokens = estimateTokens(code);
+      const shaved = shaveCode(code);
+      const compTokens = estimateTokens(shaved);
+      const saved = Math.max(0, origTokens - compTokens);
+      const pct = origTokens > 0 ? ((saved / origTokens) * 100).toFixed(1) : 0;
+
+      outputArea.value = shaved;
+      inputStats.innerText = origTokens.toLocaleString() + ' tokens';
+      outputStats.innerText = \`-\${saved.toLocaleString()} tokens (-\${pct}%)\`;
+    }
+
+    inputArea.addEventListener('input', update);
+    update();
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(outputArea.value);
+      copyBtn.innerText = 'Copied!';
+      setTimeout(() => copyBtn.innerText = 'Copy Skeleton', 1500);
+    });
+  </script>
+</body>
+</html>

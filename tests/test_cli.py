@@ -25,6 +25,22 @@ def test_cli_pack_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
     assert "print('heavy loop')" not in content
 
 
+def test_cli_pack_with_budget(tmp_path: Path, monkeypatch):
+    sample_file = tmp_path / "service.py"
+    sample_file.write_text('def f():\n    """Very long docstring that exceeds small budget."""\n    return 1\n')
+    out_file = tmp_path / "out.md"
+
+    test_args = ["codeshave", "pack", str(tmp_path), "--budget", "5", "-o", str(out_file)]
+    monkeypatch.setattr(sys, "argv", test_args)
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 0
+    content = out_file.read_text()
+    assert "def f():" in content
+
+
 def test_cli_clip_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
     sample_file = tmp_path / "service.py"
     sample_file.write_text("def test_clip():\n    return 42\n")
@@ -36,6 +52,21 @@ def test_cli_clip_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
         main()
 
     assert excinfo.value.code == 0
+
+
+def test_cli_diff_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
+    sample_file = tmp_path / "diff_test.py"
+    sample_file.write_text("def my_func():\n    val = 100\n    return val\n")
+
+    test_args = ["codeshave", "diff", str(sample_file)]
+    monkeypatch.setattr(sys, "argv", test_args)
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 0
+    captured = capsys.readouterr()
+    assert "CodeShave Diff" in captured.out
 
 
 def test_mcp_tools():
