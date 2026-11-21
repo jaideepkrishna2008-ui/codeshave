@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/pypi/v/codeshave.svg?color=blue&style=flat-square" alt="PyPI version" /></a>
-  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/pypi/pyversions/codeshave.svg?style=flat-square" alt="Python Versions" /></a>
+  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/badge/python-3.10+-3776AB.svg?style=flat-square&logo=python&logoColor=white" alt="Python Versions" /></a>
   <a href="https://github.com/jaideepkrishna2008-ui/codeshave/actions/workflows/ci.yml"><img src="https://github.com/jaideepkrishna2008-ui/codeshave/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="CI Status" /></a>
   <a href="https://buymeacoffee.com/jaideep.360"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=flat-square&logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
 </p>
