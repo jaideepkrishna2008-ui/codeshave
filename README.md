@@ -25,7 +25,7 @@
 ## ⚡ Terminal Demo
 
 <p align="center">
-  <img src="assets/demo.svg" alt="CodeShave CLI Demonstration" width="100%">
+  <img src="assets/terminal_recording.gif" alt="CodeShave Live Terminal Demo" width="100%">
 </p>
 
 <p align="center">
