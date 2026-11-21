@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="box-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="arrow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="320" rx="12" fill="#0b0f19" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Pipeline Steps -->
+  <!-- Step 1: Raw Code -->
+  <g transform="translate(40, 50)">
+    <rect width="180" height="220" rx="10" fill="url(#box-grad)" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="90" y="45" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700" fill="#38bdf8" text-anchor="middle">1. Raw Codebase</text>
+    <text x="20" y="80" font-family="monospace" font-size="12" fill="#94a3b8">• 50+ Python files</text>
+    <text x="20" y="105" font-family="monospace" font-size="12" fill="#94a3b8">• Complex classes</text>
+    <text x="20" y="130" font-family="monospace" font-size="12" fill="#94a3b8">• Internal loops/logic</text>
+    <text x="20" y="155" font-family="monospace" font-size="12" fill="#94a3b8">• Heavy dependencies</text>
+    <rect x="20" y="180" width="140" height="26" rx="6" fill="#ef4444" fill-opacity="0.2"/>
+    <text x="90" y="197" font-family="sans-serif" font-size="11" font-weight="600" fill="#f87171" text-anchor="middle">~50,000 Tokens</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g transform="translate(230, 150)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="url(#arrow-grad)" stroke-width="3"/>
+    <polygon points="30,-5 40,0 30,5" fill="#818cf8"/>
+  </g>
+
+  <!-- Step 2: AST Transformer -->
+  <g transform="translate(280, 50)">
+    <rect width="180" height="220" rx="10" fill="url(#box-grad)" stroke="#818cf8" stroke-width="1.5"/>
+    <text x="90" y="45" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700" fill="#818cf8" text-anchor="middle">2. AST Transformer</text>
+    <text x="20" y="80" font-family="monospace" font-size="12" fill="#94a3b8">• Native ast.parse()</text>
+    <text x="20" y="105" font-family="monospace" font-size="12" fill="#94a3b8">• Extracts signatures</text>
+    <text x="20" y="130" font-family="monospace" font-size="12" fill="#94a3b8">• Type hints intact</text>
+    <text x="20" y="155" font-family="monospace" font-size="12" fill="#94a3b8">• Replaces body with ...</text>
+    <rect x="20" y="180" width="140" height="26" rx="6" fill="#818cf8" fill-opacity="0.2"/>
+    <text x="90" y="197" font-family="sans-serif" font-size="11" font-weight="600" fill="#c084fc" text-anchor="middle">&lt; 10ms Parsing</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g transform="translate(470, 150)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="url(#arrow-grad)" stroke-width="3"/>
+    <polygon points="30,-5 40,0 30,5" fill="#818cf8"/>
+  </g>
+
+  <!-- Step 3: Graph Resolver -->
+  <g transform="translate(520, 50)">
+    <rect width="180" height="220" rx="10" fill="url(#box-grad)" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="90" y="45" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700" fill="#a78bfa" text-anchor="middle">3. Dependency Graph</text>
+    <text x="20" y="80" font-family="monospace" font-size="12" fill="#94a3b8">• Resolves imports</text>
+    <text x="20" y="105" font-family="monospace" font-size="12" fill="#94a3b8">• Orders by call-tree</text>
+    <text x="20" y="130" font-family="monospace" font-size="12" fill="#94a3b8">• Prunes orphan files</text>
+    <text x="20" y="155" font-family="monospace" font-size="12" fill="#94a3b8">• Formats Markdown/XML</text>
+    <rect x="20" y="180" width="140" height="26" rx="6" fill="#34d399" fill-opacity="0.2"/>
+    <text x="90" y="197" font-family="sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Zero Token Waste</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <g transform="translate(710, 150)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="url(#arrow-grad)" stroke-width="3"/>
+    <polygon points="30,-5 40,0 30,5" fill="#818cf8"/>
+  </g>
+
+  <!-- Step 4: AI Model Ingestion -->
+  <g transform="translate(760, 50)">
+    <rect width="160" height="220" rx="10" fill="url(#box-grad)" stroke="#10b981" stroke-width="1.5"/>
+    <text x="80" y="45" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700" fill="#10b981" text-anchor="middle">4. LLM Ingestion</text>
+    <text x="15" y="80" font-family="sans-serif" font-size="12" fill="#e2e8f0">• Claude 3.7 / 3.5</text>
+    <text x="15" y="105" font-family="sans-serif" font-size="12" fill="#e2e8f0">• Cursor / Copilot</text>
+    <text x="15" y="130" font-family="sans-serif" font-size="12" fill="#e2e8f0">• DeepSeek-R1</text>
+    <text x="15" y="155" font-family="sans-serif" font-size="12" fill="#e2e8f0">• Local Ollama</text>
+    <rect x="15" y="180" width="130" height="26" rx="6" fill="#10b981" fill-opacity="0.2"/>
+    <text x="80" y="197" font-family="sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">~8,500 Tokens (-83%)</text>
+  </g>
+</svg>

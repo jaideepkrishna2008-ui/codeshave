@@ -1,0 +1,18 @@
+name: 💡 Feature Request
+description: Suggest an enhancement or language support idea
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: What challenge or use-case are you trying to address?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed feature or workflow.
+    validations:
+      required: true

@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 580" width="100%" height="100%">
+  <defs>
+    <linearGradient id="term-header" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Terminal Window with drop shadow -->
+  <g filter="url(#shadow)">
+    <!-- Main Frame -->
+    <rect x="40" y="30" width="920" height="520" rx="14" fill="#0b0f19" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Title Bar -->
+    <path d="M40 44 Q40 30 54 30 L946 30 Q960 30 960 44 L960 72 L40 72 Z" fill="url(#term-header)" stroke="#334155" stroke-width="1"/>
+
+    <!-- Traffic Lights -->
+    <circle cx="68" cy="51" r="6" fill="#ef4444"/>
+    <circle cx="88" cy="51" r="6" fill="#f59e0b"/>
+    <circle cx="108" cy="51" r="6" fill="#10b981"/>
+
+    <!-- Title Text -->
+    <text x="500" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" font-weight="500" text-anchor="middle">
+      zsh - contextforge pack ./src --stats
+    </text>
+  </g>
+
+  <!-- Terminal Body Content -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13" xml:space="preserve">
+    <!-- Prompt Command Line -->
+    <text x="75" y="110">
+      <tspan fill="#10b981" font-weight="700">user@devbox</tspan><tspan fill="#64748b">:</tspan><tspan fill="#38bdf8">~/fast-app</tspan><tspan fill="#f1f5f9">$ contextforge pack ./src --format xml --stats -o llm_context.xml</tspan>
+    </text>
+
+    <!-- Scan Progress Header -->
+    <text x="75" y="145" fill="#a78bfa" font-weight="700">⚡ ContextForge v0.1.0 — AST Structural Compressor</text>
+    <text x="75" y="168" fill="#64748b">Scanning directory: ./src (recursive AST visitor initialized)</text>
+
+    <!-- Table Header -->
+    <text x="75" y="202" fill="#94a3b8" font-weight="600">FILE                                    ORIGINAL      SKELETON      REDUCTION</text>
+    <text x="75" y="218" fill="#334155">─────────────────────────────────────────────────────────────────────────────</text>
+
+    <!-- Row 1 -->
+    <text x="75" y="242">
+      <tspan fill="#f1f5f9">src/api/routes/auth.py                  </tspan>
+      <tspan fill="#e2e8f0">4,210 t       </tspan>
+      <tspan fill="#38bdf8">  780 t       </tspan>
+      <tspan fill="#34d399" font-weight="700">-81.5% [OK]</tspan>
+    </text>
+
+    <!-- Row 2 -->
+    <text x="75" y="268">
+      <tspan fill="#f1f5f9">src/services/billing_engine.py          </tspan>
+      <tspan fill="#e2e8f0">6,840 t       </tspan>
+      <tspan fill="#38bdf8">1,120 t       </tspan>
+      <tspan fill="#34d399" font-weight="700">-83.6% [OK]</tspan>
+    </text>
+
+    <!-- Row 3 -->
+    <text x="75" y="294">
+      <tspan fill="#f1f5f9">src/core/database.py                    </tspan>
+      <tspan fill="#e2e8f0">2,910 t       </tspan>
+      <tspan fill="#38bdf8">  640 t       </tspan>
+      <tspan fill="#34d399" font-weight="700">-78.0% [OK]</tspan>
+    </text>
+
+    <!-- Row 4 -->
+    <text x="75" y="320">
+      <tspan fill="#f1f5f9">src/models/user_account.py              </tspan>
+      <tspan fill="#e2e8f0">3,460 t       </tspan>
+      <tspan fill="#38bdf8">  920 t       </tspan>
+      <tspan fill="#34d399" font-weight="700">-73.4% [OK]</tspan>
+    </text>
+
+    <!-- Row 5 -->
+    <text x="75" y="346">
+      <tspan fill="#f1f5f9">src/utils/security.py                   </tspan>
+      <tspan fill="#e2e8f0">1,000 t       </tspan>
+      <tspan fill="#38bdf8">  400 t       </tspan>
+      <tspan fill="#34d399" font-weight="700">-60.0% [OK]</tspan>
+    </text>
+
+    <text x="75" y="370" fill="#334155">─────────────────────────────────────────────────────────────────────────────</text>
+
+    <!-- Summary Box -->
+    <text x="75" y="400">
+      <tspan fill="#f59e0b" font-weight="700">TOTAL METRICS:</tspan>
+      <tspan fill="#94a3b8"> 5 files processed in </tspan><tspan fill="#34d399" font-weight="700">8.4ms</tspan>
+    </text>
+    <text x="75" y="425">
+      <tspan fill="#64748b">├─ Raw Code Tokens:      </tspan><tspan fill="#e2e8f0" font-weight="600">18,420 tokens</tspan>
+    </text>
+    <text x="75" y="448">
+      <tspan fill="#64748b">├─ Compressed Skeleton:  </tspan><tspan fill="#38bdf8" font-weight="600">3,860 tokens</tspan>
+    </text>
+    <text x="75" y="471">
+      <tspan fill="#64748b">└─ Savings:              </tspan><tspan fill="#34d399" font-weight="700">14,560 tokens saved (79.0% reduction)</tspan>
+    </text>
+
+    <!-- Success Message -->
+    <text x="75" y="508" fill="#10b981" font-weight="700">✔ Output bundle exported to: llm_context.xml (Ready for Claude, Cursor &amp; Ollama)</text>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+name: 🐛 Bug Report
+description: Report a bug or AST parsing issue in ContextForge
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting an issue! Please provide as much detail as possible.
+  - type: input
+    id: version
+    attributes:
+      label: ContextForge Version
+      description: Run `contextforge --version`
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Python Code Snippet
+      description: Paste the minimal code snippet that triggers the issue
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should the compressed skeleton look like?
+    validations:
+      required: true
