@@ -1,0 +1,4 @@
+# CodeShave Context Rule for Windsurf (Cascade)
+
+When exploring project architecture, scanning files, or analyzing dependencies across Python, TypeScript, JavaScript, Go, Rust, Java, C++, and C#, always invoke CodeShave MCP (`shave_file` or `shave_code`) first. 
+Never dump full raw multi-thousand-line files into the context window when a structural AST skeleton is sufficient (85%+ token savings).

@@ -201,41 +201,135 @@ In your Antigravity MCP configuration (`~/.gemini/antigravity/mcp_config.json` o
 }
 ```
 
----
+### 5. VS Code (Copilot & Cline / Roo Code)
 
-## ⚡ Triggering CodeShave with `@` and `/` in AI IDEs
+In `.vscode/mcp.json` or Cline MCP settings:
 
-You can invoke CodeShave natively in your AI coding environment using `@` mentions, `/` slash commands, or automated rules:
-
-### 1. In Cursor IDE (Native `@codeshave` Mention)
-Once configured in `.cursor/mcp.json`, Cursor automatically registers `@codeshave` as a native context provider in the Composer and Chat:
-* Simply type **`@codeshave`** in Cursor Chat to attach CodeShave tools directly to your prompt.
-* Example: `> @codeshave inspect this repository and list all API endpoints`
-
-### 2. In Google Antigravity (Native `/codeshave` Slash Command)
-Type **`/codeshave`** in your chat input to activate the CodeShave compressor:
-* Example: `> /codeshave analyze Smartmonitor.pyw without bloating context`
-* Antigravity immediately triggers `shave_file`, extracting the structural skeleton at **90%+ token savings** in milliseconds.
-
-### 3. Automated Hands-Free Rules (Cursor, Claude, Windsurf, Codex)
-If you don't want to manually type `@` or `/` each time, drop a 1-line rule into your repo so your AI **always** defaults to CodeShave:
-
-* **Cursor IDE** (`.cursorrules`):
-  ```markdown
-  Always prioritize calling the `codeshave` MCP tool (`shave_file` or `shave_code`) when analyzing or exploring code to inspect AST skeletons (90%+ token savings) before reading raw files.
-  ```
-* **Claude Desktop** (`CLAUDE.md`):
-  ```markdown
-  Use `shave_file` from the codeshave MCP server to inspect code architecture without flooding the context window.
-  ```
-* **Windsurf Editor** (`.windsurfrules`):
-  ```markdown
-  When exploring project architecture or large files, always use CodeShave MCP (`shave_file`) first.
-  ```
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": ["mcp"]
+    }
+  }
+}
+```
 
 ---
 
-### 5. Python SDK
+## ⚡ Triggering CodeShave: `@` Mentions, `/` Slash Commands & Auto-Rules
+
+### ❓ Why Doesn't My AI Use MCP Tools Automatically?
+Many developers install an MCP server and wonder: *"Why is my AI assistant still reading raw files or using custom scripts instead of calling CodeShave?"*
+
+AI models (Claude 3.7/3.5, GPT-4o, Gemini, Cursor Composer, Windsurf Cascade) naturally have **tool inertia**—they default to generic built-in tools (`read_file` or terminal commands) that they were trained on, frequently dumping 5,000+ to 20,000+ line files into the context window and burning hundreds of thousands of tokens unnecessarily.
+
+With CodeShave, you can control your assistant in two simple ways:
+1. **Interactive Triggering**: Use **`@codeshave`** or **`/codeshave`** directly in chat when prompting.
+2. **100% Automated Hands-Free Rules**: Add a 1-line rule file to your repository so the AI **always** defaults to CodeShave on Turn 1 without needing any manual mention!
+
+---
+
+### 🕹️ Universal AI Trigger & Command Matrix
+
+| AI Assistant / IDE | Interactive Command (`@` / `/`) | How to Trigger in Chat | 100% Hands-Free Rule File | What Happens Under the Hood |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cursor IDE** | `@codeshave` | Type `@codeshave` in Composer / Chat | [`.cursorrules`](.cursorrules) | Cursor attaches CodeShave MCP tools directly to the context bundle |
+| **Windsurf (Cascade)** | `@codeshave` | Type `@` in Cascade chat input | [`.windsurfrules`](.windsurfrules) | Cascade displays `shave_file` tool call card before reading files |
+| **Google Antigravity** | `/codeshave` or `@codeshave` | Type `/codeshave` slash command | [`GEMINI.md`](GEMINI.md) | Activates `/codeshave` skill, compressing files with 90%+ token reduction |
+| **GitHub Copilot / VS Code** | `/codeshave` or `@workspace` | Native slash command via prompt file | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Executes custom prompt and invokes `shave_file` across workspace |
+| **Claude Desktop** | Natural Prompt / 🔨 Tray | Click 🔨 Hammer Icon / prompt naturally | [`CLAUDE.md`](CLAUDE.md) | Claude invokes `shave_file` before generating reasoning output |
+
+---
+
+### 1. Cursor IDE (`@codeshave` & `.cursorrules`)
+* **Interactive Usage**:
+  In Cursor Composer (`Ctrl+I` / `Cmd+I`) or Chat (`Ctrl+L` / `Cmd+L`), type **`@codeshave`**:
+  ```text
+  > @codeshave inspect this repository and list all API endpoints
+  ```
+  Cursor autocompletes the MCP tool and binds `shave_file` and `shave_code` directly.
+* **Zero-Prompt Automation**:
+  Create `.cursorrules` in your project root:
+  ```markdown
+  # .cursorrules
+  Always prioritize calling the `codeshave` MCP tool (`shave_file` or `shave_code`) when analyzing, searching, or exploring source code files. This loads the structural AST skeleton (90%+ token savings) before reading specific implementation ranges.
+  ```
+
+### 2. Windsurf Editor (`@codeshave` & `.windsurfrules`)
+* **Interactive Usage**:
+  In the Cascade chat bar, type **`@`** to open the context selector and choose **`codeshave`**:
+  ```text
+  > @codeshave analyze the auth pipeline in src/services/auth.ts
+  ```
+* **Zero-Prompt Automation**:
+  Create `.windsurfrules` in your project root:
+  ```markdown
+  # .windsurfrules
+  When exploring project architecture or scanning files across Python, TypeScript, Go, Rust, Java, C++, and C#, always invoke CodeShave MCP (`shave_file`) first. Never dump full raw multi-thousand-line files into context when a structural skeleton is sufficient.
+  ```
+
+### 3. Google Antigravity (`/codeshave` & `GEMINI.md`)
+* **Interactive Usage**:
+  Type **`/codeshave`** directly in the Antigravity chat input:
+  ```text
+  > /codeshave explore src/ and summarize the database layer
+  ```
+  Antigravity immediately executes the `/codeshave` skill, compressing all targeted files down to syntax-valid AST skeletons in ~150ms.
+* **Zero-Prompt Automation**:
+  Add to your `GEMINI.md` (or workspace rules):
+  ```markdown
+  # GEMINI.md
+  Always prioritize calling the `codeshave` MCP (`shave_file` or `shave_code`) or activating `/codeshave` when analyzing or exploring code files to inspect AST skeletons (90%+ savings) before reading raw lines.
+  ```
+
+### 4. GitHub Copilot & VS Code (`/codeshave` Prompt & Instructions)
+* **Custom Slash Command**:
+  VS Code supports custom prompt files. Create `.github/prompts/codeshave.prompt.md`:
+  ```markdown
+  ---
+  name: codeshave
+  description: Shave and compress code AST skeletons to reduce context tokens by 85%+
+  ---
+  Use the codeshave MCP server (`shave_file` or `shave_code`) to inspect structural AST skeletons across workspace files before reading full raw implementation bodies into context.
+  ```
+  Typing **`/codeshave`** in Copilot Chat will now execute this prompt natively!
+* **Zero-Prompt Automation**:
+  Create `.github/copilot-instructions.md` in your repo:
+  ```markdown
+  # .github/copilot-instructions.md
+  When analyzing, reviewing, or exploring files in this repository, always call the CodeShave MCP server tools (`shave_file` or `shave_code`) first to save up to 85% of context window tokens.
+  ```
+
+### 5. Claude Desktop (🔨 Tool Tray & `CLAUDE.md`)
+* **Interactive Usage**:
+  1. Open Claude Desktop and confirm the **🔨 (Hammer icon)** in the bottom right corner displays `codeshave (2 tools)`.
+  2. Prompt Claude naturally:
+  ```text
+  > Use codeshave to shave src/server.go and analyze its handlers.
+  ```
+* **Zero-Prompt Automation**:
+  Create `CLAUDE.md` in your project root:
+  ```markdown
+  # CLAUDE.md
+  Always prioritize calling the `codeshave` MCP tools (`shave_file` or `shave_code`) when analyzing or exploring code to preserve full types and signatures while keeping context lean.
+  ```
+
+---
+
+### 📦 Ready-to-Use Drop-in Rule Pack
+You can copy these pre-configured rule files directly into your existing repositories:
+- [`.cursorrules`](.cursorrules) — Cursor IDE auto-compression rule
+- [`.windsurfrules`](.windsurfrules) — Windsurf Cascade auto-compression rule
+- [`GEMINI.md`](GEMINI.md) — Google Antigravity & Gemini rule
+- [`CLAUDE.md`](CLAUDE.md) — Claude Desktop project guideline
+- [`.github/copilot-instructions.md`](.github/copilot-instructions.md) — GitHub Copilot instruction
+- [`.github/prompts/codeshave.prompt.md`](.github/prompts/codeshave.prompt.md) — Custom `/codeshave` command for Copilot Chat
+
+---
+
+## 🐍 Python SDK
 
 ```python
 from codeshave import compress_code, compute_savings
