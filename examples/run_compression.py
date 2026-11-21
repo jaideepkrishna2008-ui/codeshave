@@ -1,9 +1,9 @@
 """
-Quick programmatic usage of TokenSkel in Python scripts.
+Quick programmatic usage of CodeShave in Python scripts.
 """
 
 from pathlib import Path
-from tokenskel import compress_source, compute_savings
+from codeshave import compress_source, compute_savings
 
 sample_file = Path(__file__).parent / "demo_fastapi_service.py"
 raw_code = sample_file.read_text(encoding="utf-8")
@@ -13,7 +13,7 @@ skeleton = compress_source(raw_code, preserve_docstrings=True)
 report = compute_savings(raw_code, skeleton)
 
 print("=" * 60)
-print("TOKENSKEL SKELETON DEMO")
+print("CODESHAVE SKELETON DEMO")
 print("=" * 60)
 print(skeleton)
 print("=" * 60)

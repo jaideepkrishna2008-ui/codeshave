@@ -1,7 +1,7 @@
-# TokenSkel
+# CodeShave
 
 <p align="center">
-  <img src="assets/banner.svg" alt="TokenSkel Banner" width="100%">
+  <img src="assets/banner.svg" alt="CodeShave Banner" width="100%">
 </p>
 
 <p align="center">
@@ -14,12 +14,12 @@
 ## ⚡ Terminal Demo
 
 <p align="center">
-  <img src="assets/demo.svg" alt="TokenSkel CLI Demonstration" width="100%">
+  <img src="assets/demo.svg" alt="CodeShave CLI Demonstration" width="100%">
 </p>
 
 ---
 
-## 🎯 Why TokenSkel?
+## 🎯 Why CodeShave?
 
 When developers feed large directories to LLMs or AI agents, context windows quickly fill up, latency spikes, and API token bills mount. 
 
@@ -27,7 +27,7 @@ Traditional approaches either:
 1. Truncate files blindly, breaking syntax trees and references.
 2. Rely on costly, slow LLMs to summarize code before prompting.
 
-**TokenSkel** uses Python's native Abstract Syntax Tree (AST) engine to deterministically transform code into clean interface skeletons:
+**CodeShave** uses Python's native Abstract Syntax Tree (AST) engine to deterministically transform code into clean interface skeletons:
 - Strips implementation logic inside functions and replaces with `...`.
 - Preserves all class structures, inheritance, and attributes.
 - Retains parameter type annotations, defaults, and return types.
@@ -39,7 +39,7 @@ Traditional approaches either:
 ## 🏗️ Architecture
 
 <p align="center">
-  <img src="assets/architecture.svg" alt="TokenSkel Architecture Diagram" width="100%">
+  <img src="assets/architecture.svg" alt="CodeShave Architecture Diagram" width="100%">
 </p>
 
 ---
@@ -49,8 +49,8 @@ Traditional approaches either:
 ### Installation
 
 ```bash
-git clone https://github.com/jaideepkrishna2008-ui/tokenskel.git
-cd tokenskel
+git clone https://github.com/jaideepkrishna2008-ui/codeshave.git
+cd codeshave
 pip install -e .
 ```
 
@@ -58,19 +58,19 @@ pip install -e .
 
 ```bash
 # Compress directory into an LLM context bundle
-tokenskel pack ./src -o llm_context.md
+codeshave pack ./src -o llm_context.md
 
 # Generate Claude-optimized XML bundle with live savings statistics
-tokenskel pack ./src --format xml --stats -o llm_context.xml
+codeshave pack ./src --format xml --stats -o llm_context.xml
 
 # Inspect a single file's compressed skeleton
-tokenskel inspect ./src/services/billing.py
+codeshave inspect ./src/services/billing.py
 ```
 
 ### Python API
 
 ```python
-from tokenskel import compress_source, compute_savings
+from codeshave import compress_source, compute_savings
 
 raw_code = open("service.py").read()
 skeleton = compress_source(raw_code, preserve_docstrings=True)
@@ -84,7 +84,7 @@ print(report.summary_line())
 
 ## 📊 Token Savings Benchmark
 
-| Source Type | Original Tokens | TokenSkel Skeleton | Reduction | Syntax Status |
+| Source Type | Original Tokens | CodeShave Skeleton | Reduction | Syntax Status |
 | :--- | :--- | :--- | :--- | :--- |
 | Data Models | 3,460 t | 920 t | **73.4%** | ✅ Valid AST |
 | API Endpoints | 4,210 t | 780 t | **81.5%** | ✅ Valid AST |
@@ -95,10 +95,20 @@ print(report.summary_line())
 
 ## 💖 Sponsorship & Backing
 
-If TokenSkel saves you tokens or accelerates your agent workflow, consider supporting ongoing development:
+If CodeShave saves you tokens, reduces your API bills, or accelerates your agent workflow, consider supporting ongoing open-source development:
 
-- **GitHub Sponsors**: [jaideepkrishna2008-ui](https://github.com/sponsors/jaideepkrishna2008-ui)
-- **Ko-fi**: [jaideepkrishna](https://ko-fi.com/jaideepkrishna)
+<p align="left">
+  <a href="https://buymeacoffee.com/jaideep.360" target="_blank">
+    <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=for-the-badge&logo=buy-me-a-coffee" alt="Buy Me A Coffee" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/sponsors/jaideepkrishna2008-ui" target="_blank">
+    <img src="https://img.shields.io/badge/Sponsor%20on%20GitHub-jaideepkrishna2008--ui-ea4aaa?style=for-the-badge&logo=github-sponsors" alt="Sponsor on GitHub" />
+  </a>
+</p>
+
+* **Buy Me A Coffee**: [https://buymeacoffee.com/jaideep.360](https://buymeacoffee.com/jaideep.360)
+* **GitHub Sponsors**: [https://github.com/sponsors/jaideepkrishna2008-ui](https://github.com/sponsors/jaideepkrishna2008-ui)
 
 ---
 

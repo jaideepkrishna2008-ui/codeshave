@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 import pytest
-from tokenskel.cli import main
+from codeshave.cli import main
 
 
 def test_cli_pack_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
@@ -10,7 +10,7 @@ def test_cli_pack_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
 
     out_file = tmp_path / "output.md"
 
-    test_args = ["tokenskel", "pack", str(tmp_path), "-o", str(out_file), "-f", "md"]
+    test_args = ["codeshave", "pack", str(tmp_path), "-o", str(out_file), "-f", "md"]
     monkeypatch.setattr(sys, "argv", test_args)
 
     with pytest.raises(SystemExit) as excinfo:

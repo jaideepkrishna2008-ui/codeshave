@@ -1,5 +1,5 @@
 """
-CLI interface for TokenSkel.
+CLI interface for CodeShave.
 """
 
 from __future__ import annotations
@@ -10,11 +10,11 @@ import time
 from pathlib import Path
 from typing import List
 
-from tokenskel import __version__
-from tokenskel.estimator import compute_savings, estimate_tokens
-from tokenskel.formatters import FileContextItem, format_bundle
-from tokenskel.graph import DependencyResolver
-from tokenskel.parser import compress_source
+from codeshave import __version__
+from codeshave.estimator import compute_savings, estimate_tokens
+from codeshave.formatters import FileContextItem, format_bundle
+from codeshave.graph import DependencyResolver
+from codeshave.parser import compress_source
 
 
 DEFAULT_EXCLUDES = {
@@ -74,7 +74,7 @@ def handle_pack(args: argparse.Namespace) -> int:
     total_comp_tokens = 0
 
     if args.stats or not args.output:
-        sys.stderr.write(f"\n⚡ TokenSkel v{__version__} — AST Structural Compressor\n")
+        sys.stderr.write(f"\n⚡ CodeShave v{__version__} — AST Structural Compressor\n")
         sys.stderr.write(f"Scanning: {target}\n\n")
         header = f"{'FILE':<45} {'ORIGINAL':<12} {'SKELETON':<12} {'SAVINGS':<10}"
         sys.stderr.write(header + "\n")
@@ -162,10 +162,10 @@ def handle_inspect(args: argparse.Namespace) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        prog="tokenskel",
-        description="⚡ TokenSkel: Zero-loss AST code context compressor for AI coding assistants.",
+        prog="codeshave",
+        description="⚡ CodeShave: Zero-loss AST code context compressor for AI coding assistants.",
     )
-    parser.add_argument("-v", "--version", action="version", version=f"tokenskel {__version__}")
+    parser.add_argument("-v", "--version", action="version", version=f"codeshave {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Pack command

@@ -1,6 +1,6 @@
 """
 Example FastAPI application with authentication, database models, and analytics.
-Demonstrates TokenSkel AST skeleton compression.
+Demonstrates CodeShave AST skeleton compression.
 """
 
 from typing import List, Optional

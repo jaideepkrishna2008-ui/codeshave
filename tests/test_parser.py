@@ -1,6 +1,6 @@
 import ast
 import pytest
-from tokenskel.parser import compress_source, extract_symbols
+from codeshave.parser import compress_source, extract_symbols
 
 
 SAMPLE_CODE = '''
