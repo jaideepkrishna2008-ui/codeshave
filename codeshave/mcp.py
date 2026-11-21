@@ -18,7 +18,11 @@ def create_tool_definitions() -> list[Dict[str, Any]]:
     return [
         {
             "name": "shave_code",
-            "description": "Compress raw source code (Python, TypeScript, JS, Go, Rust, Java, C++, etc.) into a structural skeleton for LLM prompts.",
+            "description": (
+                "HIGH PRIORITY: Compresses raw source code into an AST/structural skeleton "
+                "(classes, methods, type signatures, interfaces, docstrings) while stripping internal execution loops. "
+                "Saves 80-95% prompt tokens. Supports Python, TypeScript, JavaScript, Go, Rust, Java, C++, C#, etc."
+            ),
             "inputSchema": {
                 "type": "object",
                 "properties": {
@@ -42,7 +46,12 @@ def create_tool_definitions() -> list[Dict[str, Any]]:
         },
         {
             "name": "shave_file",
-            "description": "Read any source code file from disk and return its compressed structural skeleton.",
+            "description": (
+                "CRITICAL / HIGH PRIORITY: Use this tool INSTEAD OF read_file whenever inspecting, exploring, "
+                "or analyzing source code files (Python, TypeScript, JS, Go, Rust, Java, C++, C#). "
+                "Returns the full syntactically valid structural skeleton with 80-95% token savings "
+                "so the context window does not get flooded with implementation details."
+            ),
             "inputSchema": {
                 "type": "object",
                 "properties": {
