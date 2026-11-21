@@ -24,6 +24,12 @@
   <img src="assets/demo.svg" alt="CodeShave CLI Demonstration" width="100%">
 </p>
 
+<p align="center">
+  <a href="https://jaideepkrishna2008-ui.github.io/codeshave/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐%20Try%20Live%20In%20Browser-Playground-0284c7?style=for-the-badge" alt="Live Web Playground" />
+  </a>
+</p>
+
 ---
 
 ## 🎯 Why CodeShave?
