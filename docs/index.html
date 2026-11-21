@@ -11,7 +11,6 @@
       --card-bg: #111827;
       --border: #1f2937;
       --accent: #38bdf8;
-      --accent-glow: #6366f1;
       --text: #f3f4f6;
       --text-muted: #9ca3af;
       --green: #34d399;
@@ -79,22 +78,22 @@
     .btn-coffee:hover { background: #d97706; }
     .hero {
       text-align: center;
-      padding: 2.5rem 1rem 1.5rem;
+      padding: 2.2rem 1rem 1.2rem;
     }
     .hero h1 {
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       font-weight: 800;
       letter-spacing: -1px;
       margin-bottom: 0.75rem;
     }
     .hero p {
       color: var(--text-muted);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       max-width: 680px;
       margin: 0 auto;
     }
     .container {
-      max-width: 1350px;
+      max-width: 1400px;
       width: 100%;
       margin: 0 auto;
       padding: 0 1.5rem 2rem;
@@ -102,12 +101,35 @@
       display: flex;
       flex-direction: column;
     }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .toolbar-left {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-tool {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-tool:hover { background: #334155; color: #fff; }
     .editor-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
       flex: 1;
-      min-height: 480px;
+      min-height: 520px;
     }
     @media (max-width: 860px) {
       .editor-grid { grid-template-columns: 1fr; }
@@ -134,9 +156,10 @@
     .badge-stat {
       color: var(--green);
       background: rgba(52, 211, 153, 0.15);
-      padding: 0.2rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 6px;
       font-weight: 700;
+      font-size: 0.82rem;
     }
     textarea {
       flex: 1;
@@ -146,22 +169,24 @@
       border: none;
       padding: 1.25rem;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.88rem;
+      line-height: 1.55;
       resize: none;
       outline: none;
       white-space: pre;
     }
     .btn-copy {
-      background: #2563eb;
+      background: #0284c7;
       color: #fff;
       border: none;
-      padding: 0.35rem 0.85rem;
+      padding: 0.4rem 0.95rem;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       cursor: pointer;
+      font-weight: 600;
+      transition: background 0.15s ease;
     }
-    .btn-copy:hover { background: #1d4ed8; }
+    .btn-copy:hover { background: #0369a1; }
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -188,10 +213,20 @@
 
   <div class="hero">
     <h1>Shave 80% of Tokens in Real Time</h1>
-    <p>Paste your Python code below. CodeShave strips internal logic while retaining 100% syntactically valid classes, methods, docstrings, and type hints.</p>
+    <p>Paste any Python codebase below. CodeShave strips internal execution loops while preserving 100% syntactically valid classes, methods, docstrings, and type hints for LLM prompts.</p>
   </div>
 
   <div class="container">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button id="load-sample-btn" class="btn-tool">Load Sample Code</button>
+        <button id="clear-btn" class="btn-tool">Clear</button>
+      </div>
+      <div>
+        <span style="font-size:0.8rem; color:#64748b;">Instant AST Compression • Runs 100% in your browser</span>
+      </div>
+    </div>
+
     <div class="editor-grid">
       <!-- Input Panel -->
       <div class="panel">
@@ -211,49 +246,56 @@
             <button id="copy-btn" class="btn-copy">Copy Skeleton</button>
           </div>
         </div>
-        <textarea id="output-code" spellcheck="false" readonly></textarea>
+        <textarea id="output-code" spellcheck="false" readonly placeholder="Shaved skeleton will appear here..."></textarea>
       </div>
     </div>
   </div>
 
   <footer>
-    Created by <b>Jaideep Krishna A</b> (@jaideepkrishna2008-ui) • Powered by Python AST Compression
+    Created by <b>Jaideep Krishna A</b> (@jaideepkrishna2008-ui) • Published on PyPI: <code>pip install codeshave</code>
   </footer>
 
   <script>
-    const SAMPLE_CODE = `"""
-Example payment and user persistence microservice.
-"""
-from typing import List, Optional
+    const SAMPLE_CODE = `import os
+import sys
+from typing import List, Optional, Dict
 from dataclasses import dataclass
 
 @dataclass
 class UserAccount:
-    """Represents a validated platform account."""
+    """Represents a registered platform account."""
     user_id: int
     email: str
+    role: str = "developer"
     is_active: bool = True
 
-class PaymentGateway:
-    """Handles external payment processing and webhooks."""
+class SystemController:
+    """Handles system metrics collection, database access, and event queues."""
 
-    def __init__(self, api_key: str, sandbox_mode: bool = False):
-        self.api_key = api_key
-        self.sandbox_mode = sandbox_mode
+    def __init__(self, host: str = "localhost", port: int = 8080):
+        self.host = host
+        self.port = port
+        self._connected = False
 
-    def process_charge(self, customer_id: int, amount_usd: float) -> bool:
-        """Charges customer account balance."""
-        print(f"Connecting to bank network for customer {customer_id}...")
-        fee = amount_usd * 0.029 + 0.30
-        print(f"Applying transaction fee: {fee}")
+    def connect(self) -> bool:
+        """Establishes connection to the central telemetry bus."""
+        print(f"Opening connection to {self.host}:{self.port}...")
+        for attempt in range(5):
+            print(f"Checking socket readiness (attempt {attempt})...")
+        self._connected = True
         return True
 
-    async def list_historical_transactions(self, limit: int = 50) -> List[dict]:
-        """Fetches ledger transactions."""
-        records = []
-        for i in range(limit):
-            records.append({"tx_id": i, "status": "completed"})
-        return records
+    def query_metrics(self, category: str, interval_sec: int = 60) -> Dict[str, float]:
+        """Fetches sampled CPU, Memory, and IO telemetry metrics."""
+        results = {}
+        for metric_id in ["cpu_usage", "ram_used", "disk_read_iops"]:
+            results[metric_id] = 42.0
+        return results
+
+    async def dispatch_event(self, event_name: str, payload: dict) -> None:
+        """Asynchronously dispatches notification payload to active subscribers."""
+        raw_json = str(payload)
+        print(f"Dispatching {event_name}: {raw_json}")
 `;
 
     const inputArea = document.getElementById('input-code');
@@ -261,81 +303,86 @@ class PaymentGateway:
     const inputStats = document.getElementById('input-stats');
     const outputStats = document.getElementById('output-stats');
     const copyBtn = document.getElementById('copy-btn');
-
-    inputArea.value = SAMPLE_CODE;
+    const sampleBtn = document.getElementById('load-sample-btn');
+    const clearBtn = document.getElementById('clear-btn');
 
     function estimateTokens(text) {
-      if (!text) return 0;
+      if (!text || text.trim() === '') return 0;
       return Math.max(1, Math.round(text.length / 3.7));
     }
 
-    // Client-side lightweight Python skeletonizer for web demo
     function shaveCode(source) {
-      const lines = source.split('\\n');
-      let result = [];
-      let inDocstring = false;
-      let docstringQuote = '';
+      if (!source || source.trim() === '') return '';
+      const lines = source.split(/\r?\n/);
+      const result = [];
       let skippingBody = false;
-      let currentIndent = 0;
+      let bodyIndent = 0;
+      let inDocstring = false;
+      let docstringMarker = '';
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const trimmed = line.trim();
 
-        // Preserve empty lines and imports
-        if (!trimmed || trimmed.startsWith('import ') || trimmed.startsWith('from ')) {
-          result.push(line);
-          skippingBody = false;
+        if (trimmed === '') {
+          if (!skippingBody) result.push('');
           continue;
         }
 
-        // Preserve decorators and class definitions
-        if (trimmed.startsWith('@') || trimmed.startsWith('class ')) {
+        const indentMatch = line.match(/^(\s*)/);
+        const indent = indentMatch ? indentMatch[1].length : 0;
+
+        // Spanning multi-line docstring
+        if (inDocstring) {
           result.push(line);
-          skippingBody = false;
+          if (trimmed.endsWith(docstringMarker)) {
+            inDocstring = false;
+            docstringMarker = '';
+            result.push(' '.repeat(bodyIndent) + '...');
+          }
           continue;
         }
 
-        // Function definition
+        // Check if inside function body
+        if (skippingBody) {
+          if (indent >= bodyIndent) {
+            // Check for docstring
+            if (trimmed.startsWith('"""') || trimmed.startsWith("'''")) {
+              const marker = trimmed.substring(0, 3);
+              if (trimmed.length > 3 && trimmed.slice(3).includes(marker)) {
+                // Single-line docstring
+                result.push(line);
+                result.push(' '.repeat(bodyIndent) + '...');
+              } else {
+                inDocstring = true;
+                docstringMarker = marker;
+                result.push(line);
+              }
+            }
+            continue;
+          } else {
+            skippingBody = false;
+          }
+        }
+
+        // Function or method header
         if (trimmed.startsWith('def ') || trimmed.startsWith('async def ')) {
           result.push(line);
           skippingBody = true;
-          currentIndent = line.search(/\\S/);
-          
-          // Peek next line for docstring
-          let nextIdx = i + 1;
-          let hasDoc = false;
-          while (nextIdx < lines.length) {
-            const nextTrimmed = lines[nextIdx].trim();
-            if (nextTrimmed.startsWith('"""') || nextTrimmed.startsWith("'''")) {
-              hasDoc = true;
-              break;
-            } else if (nextTrimmed) {
-              break;
+          bodyIndent = indent + 4;
+
+          let nextHasDoc = false;
+          for (let j = i + 1; j < lines.length; j++) {
+            const nextTrim = lines[j].trim();
+            if (nextTrim === '') continue;
+            if (nextTrim.startsWith('"""') || nextTrim.startsWith("'''")) {
+              nextHasDoc = true;
             }
-            nextIdx++;
+            break;
           }
 
-          if (!hasDoc) {
-            result.push(' '.repeat(currentIndent + 4) + '...');
-          }
-          continue;
-        }
-
-        // Docstring handling inside function
-        if (skippingBody) {
-          const indent = line.search(/\\S/);
-          if (trimmed.startsWith('"""') || trimmed.startsWith("'''")) {
-            result.push(line);
-            if (trimmed.length > 3 && (trimmed.endsWith('"""') || trimmed.endsWith("'''"))) {
-              result.push(' '.repeat(indent) + '...');
-              skippingBody = false;
-            }
-            continue;
-          }
-          if (indent <= currentIndent) {
-            skippingBody = false;
-            result.push(line);
+          if (!nextHasDoc) {
+            result.push(' '.repeat(bodyIndent) + '...');
           }
           continue;
         }
@@ -343,30 +390,47 @@ class PaymentGateway:
         result.push(line);
       }
 
-      return result.join('\\n');
+      return result.join('\n');
     }
 
     function update() {
-      const code = inputArea.value;
+      const code = inputArea.value || '';
       const origTokens = estimateTokens(code);
       const shaved = shaveCode(code);
       const compTokens = estimateTokens(shaved);
       const saved = Math.max(0, origTokens - compTokens);
-      const pct = origTokens > 0 ? ((saved / origTokens) * 100).toFixed(1) : 0;
+      const pct = origTokens > 0 ? ((saved / origTokens) * 100).toFixed(1) : '0';
 
       outputArea.value = shaved;
       inputStats.innerText = origTokens.toLocaleString() + ' tokens';
-      outputStats.innerText = \`-\${saved.toLocaleString()} tokens (-\${pct}%)\`;
+      outputStats.innerText = '-' + saved.toLocaleString() + ' tokens (-' + pct + '%)';
     }
 
     inputArea.addEventListener('input', update);
-    update();
+    inputArea.addEventListener('paste', function() { setTimeout(update, 20); });
+    inputArea.addEventListener('keyup', update);
+    inputArea.addEventListener('change', update);
 
-    copyBtn.addEventListener('click', () => {
+    sampleBtn.addEventListener('click', function() {
+      inputArea.value = SAMPLE_CODE;
+      update();
+    });
+
+    clearBtn.addEventListener('click', function() {
+      inputArea.value = '';
+      update();
+    });
+
+    copyBtn.addEventListener('click', function() {
+      if (!outputArea.value) return;
       navigator.clipboard.writeText(outputArea.value);
       copyBtn.innerText = 'Copied!';
-      setTimeout(() => copyBtn.innerText = 'Copy Skeleton', 1500);
+      setTimeout(function() { copyBtn.innerText = 'Copy Skeleton'; }, 1500);
     });
+
+    // Run on initial load
+    inputArea.value = SAMPLE_CODE;
+    update();
   </script>
 </body>
 </html>
