@@ -5,6 +5,13 @@
 </p>
 
 <p align="center">
+  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/pypi/v/codeshave.svg?color=blue&style=flat-square" alt="PyPI version" /></a>
+  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/pypi/pyversions/codeshave.svg?style=flat-square" alt="Python Versions" /></a>
+  <a href="https://github.com/jaideepkrishna2008-ui/codeshave/actions/workflows/ci.yml"><img src="https://github.com/jaideepkrishna2008-ui/codeshave/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="CI Status" /></a>
+  <a href="https://buymeacoffee.com/jaideep.360"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=flat-square&logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
+</p>
+
+<p align="center">
   <b>High-speed, deterministic AST code context compressor for AI coding assistants and local LLMs.</b><br>
   Reduces prompt tokens by 60% to 80% while preserving valid syntax, type signatures, and class hierarchies.
 </p>
@@ -48,18 +55,16 @@ Traditional approaches either:
 
 ### Installation
 
-Install directly via `pip` from GitHub:
+Install globally via PyPI:
+
+```bash
+pip install codeshave
+```
+
+Or install from GitHub:
 
 ```bash
 pip install git+https://github.com/jaideepkrishna2008-ui/codeshave.git
-```
-
-Or clone for local development:
-
-```bash
-git clone https://github.com/jaideepkrishna2008-ui/codeshave.git
-cd codeshave
-pip install -e .
 ```
 
 ### ⚡ CLI Commands
@@ -82,11 +87,15 @@ codeshave inspect ./src/services/billing.py
 
 ---
 
-## 🔌 Model Context Protocol (MCP) Integration
+## 🔌 AI Assistant & Editor Integration (MCP Server)
 
-CodeShave runs as a turnkey **MCP Server** over standard I/O, allowing **Claude Desktop**, **Cursor**, and **Windsurf** to automatically compress files on the fly before reasoning:
+CodeShave runs as a turnkey **Model Context Protocol (MCP)** server over standard I/O (`stdio`). This allows AI coding assistants to automatically invoke CodeShave and compress source code before analyzing it, saving up to 80% on prompt tokens.
+
+### 1. Claude Desktop
 
 Add to your `claude_desktop_config.json`:
+* **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+* **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -97,6 +106,76 @@ Add to your `claude_desktop_config.json`:
     }
   }
 }
+```
+
+### 2. Cursor IDE
+
+1. Open **Cursor Settings** $\rightarrow$ **Features** $\rightarrow$ **MCP**.
+2. Click **+ Add New MCP Server**.
+3. Configure:
+   * **Name**: `codeshave`
+   * **Type**: `command`
+   * **Command**: `codeshave mcp`
+
+Alternatively, add to `.cursor/mcp.json` in your workspace:
+
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### 3. Windsurf Editor
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### 4. Google Antigravity
+
+In your Antigravity MCP configuration (`~/.gemini/antigravity/mcp_config.json` or project settings):
+
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### 5. OpenAI / Codex & Autonomous Agents
+
+Invoke CodeShave directly inside your custom agentic pipelines via Python SDK:
+
+```python
+from codeshave import compress_source, compute_savings
+
+with open("complex_service.py") as f:
+    code = f.read()
+
+# Shave 80% of tokens while retaining 100% valid Python interface syntax
+skeleton = compress_source(code, preserve_docstrings=True)
+report = compute_savings(code, skeleton)
+
+prompt = f"Analyze this architecture:\n\n{skeleton}"
+# Send compressed prompt to OpenAI, Claude, or local Ollama
 ```
 
 ### Python API
