@@ -13,3 +13,6 @@ dependencies = []
 
 [project.scripts]
 codeshave = "codeshave.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["codeshave*"]

@@ -48,23 +48,55 @@ Traditional approaches either:
 
 ### Installation
 
+Install directly via `pip` from GitHub:
+
+```bash
+pip install git+https://github.com/jaideepkrishna2008-ui/codeshave.git
+```
+
+Or clone for local development:
+
 ```bash
 git clone https://github.com/jaideepkrishna2008-ui/codeshave.git
 cd codeshave
 pip install -e .
 ```
 
-### CLI Usage
+### ⚡ CLI Commands
 
 ```bash
-# Compress directory into an LLM context bundle
+# 📋 One-Click Clipboard Copy: Compress and copy directly to clipboard
+codeshave clip ./src
+codeshave clip ./src/models.py
+# -> Copied to clipboard! Ready to paste directly into ChatGPT, Claude, or Cursor!
+
+# 📦 Pack directory into an LLM context bundle
 codeshave pack ./src -o llm_context.md
 
-# Generate Claude-optimized XML bundle with live savings statistics
+# 🏷️ Generate Claude-optimized XML bundle with live savings statistics
 codeshave pack ./src --format xml --stats -o llm_context.xml
 
-# Inspect a single file's compressed skeleton
+# 🔍 Inspect a single file's compressed skeleton
 codeshave inspect ./src/services/billing.py
+```
+
+---
+
+## 🔌 Model Context Protocol (MCP) Integration
+
+CodeShave runs as a turnkey **MCP Server** over standard I/O, allowing **Claude Desktop**, **Cursor**, and **Windsurf** to automatically compress files on the fly before reasoning:
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": ["mcp"]
+    }
+  }
+}
 ```
 
 ### Python API

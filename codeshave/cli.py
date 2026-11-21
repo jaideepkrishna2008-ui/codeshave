@@ -11,9 +11,11 @@ from pathlib import Path
 from typing import List
 
 from codeshave import __version__
+from codeshave.clipboard import copy_to_clipboard
 from codeshave.estimator import compute_savings, estimate_tokens
 from codeshave.formatters import FileContextItem, format_bundle
 from codeshave.graph import DependencyResolver
+from codeshave.mcp import run_mcp_server
 from codeshave.parser import compress_source
 
 
@@ -144,6 +146,60 @@ def handle_pack(args: argparse.Namespace) -> int:
     return 0
 
 
+def handle_clip(args: argparse.Namespace) -> int:
+    """Compresses file or directory and copies directly to OS clipboard."""
+    target = Path(args.path).resolve()
+    if not target.exists():
+        sys.stderr.write(f"Error: Target path '{args.path}' does not exist.\n")
+        return 1
+
+    if target.is_file():
+        content = target.read_text(encoding="utf-8")
+        compressed = compress_source(content, preserve_docstrings=not args.no_docs)
+        report = compute_savings(content, compressed)
+        formatted = f"# File: {target.name}\n```python\n{compressed}\n```\n"
+        copied = copy_to_clipboard(formatted)
+        if copied:
+            sys.stderr.write(
+                f"✔ Copied to clipboard! {report.summary_line()} "
+                f"(-{report.reduction_percentage:.1f}%)\n"
+                f"Ready to paste into ChatGPT, Claude, or Cursor.\n"
+            )
+            return 0
+        else:
+            sys.stdout.write(formatted)
+            return 0
+    else:
+        # Directory pack into markdown and copy
+        files = find_python_files(target, DEFAULT_EXCLUDES)
+        if not files:
+            sys.stderr.write("No Python files found.\n")
+            return 1
+        items = []
+        total_orig = 0
+        total_comp = 0
+        for f in files:
+            rel = f.relative_to(target)
+            code = f.read_text(encoding="utf-8")
+            comp = compress_source(code, preserve_docstrings=not args.no_docs)
+            ot = estimate_tokens(code)
+            ct = estimate_tokens(comp)
+            total_orig += ot
+            total_comp += ct
+            items.append(FileContextItem(str(rel), code, comp, ot, ct))
+
+        bundle = format_bundle(items, output_format="md")
+        saved = max(0, total_orig - total_comp)
+        pct = (saved / total_orig * 100.0) if total_orig > 0 else 0.0
+        copy_to_clipboard(bundle)
+        sys.stderr.write(
+            f"✔ Copied {len(items)} files to clipboard! "
+            f"({total_orig:,} t -> {total_comp:,} t, -{pct:.1f}% saved)\n"
+            f"Ready to paste directly into LLM prompt.\n"
+        )
+        return 0
+
+
 def handle_inspect(args: argparse.Namespace) -> int:
     target = Path(args.path).resolve()
     if not target.is_file():
@@ -185,17 +241,29 @@ def main() -> None:
     pack_p.add_argument("--exclude", help="Comma-separated directories to exclude")
     pack_p.add_argument("--stats", action="store_true", help="Force display of summary metrics")
 
+    # Clip command
+    clip_p = subparsers.add_parser("clip", help="Compress and copy directly to OS clipboard (ready to paste)")
+    clip_p.add_argument("path", help="Source file or directory to compress and copy")
+    clip_p.add_argument("--no-docs", action="store_true", help="Omit docstrings")
+
     # Inspect command
     inspect_p = subparsers.add_parser("inspect", help="Inspect compressed skeleton of a single file")
     inspect_p.add_argument("path", help="Target Python file")
     inspect_p.add_argument("--no-docs", action="store_true", help="Omit docstrings")
 
+    # MCP command
+    subparsers.add_parser("mcp", help="Launch Model Context Protocol (MCP) stdio server")
+
     args = parser.parse_args()
 
     if args.command == "pack":
         sys.exit(handle_pack(args))
+    elif args.command == "clip":
+        sys.exit(handle_clip(args))
     elif args.command == "inspect":
         sys.exit(handle_inspect(args))
+    elif args.command == "mcp":
+        run_mcp_server()
 
 
 if __name__ == "__main__":

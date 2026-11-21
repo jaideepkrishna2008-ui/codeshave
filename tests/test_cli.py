@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 import pytest
 from codeshave.cli import main
+from codeshave.mcp import handle_call_tool, create_tool_definitions
 
 
 def test_cli_pack_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
@@ -22,3 +23,31 @@ def test_cli_pack_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
     assert "class MyService:" in content
     assert "..." in content
     assert "print('heavy loop')" not in content
+
+
+def test_cli_clip_runs_cleanly(tmp_path: Path, monkeypatch, capsys):
+    sample_file = tmp_path / "service.py"
+    sample_file.write_text("def test_clip():\n    return 42\n")
+
+    test_args = ["codeshave", "clip", str(sample_file)]
+    monkeypatch.setattr(sys, "argv", test_args)
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 0
+
+
+def test_mcp_tools():
+    tools = create_tool_definitions()
+    names = [t["name"] for t in tools]
+    assert "shave_code" in names
+    assert "shave_file" in names
+
+    # Call shave_code
+    res = handle_call_tool({
+        "name": "shave_code",
+        "arguments": {"source_code": "def hello():\n    print('world')\n"}
+    })
+    assert res["isError"] is False
+    assert "def hello():" in res["content"][0]["text"]
