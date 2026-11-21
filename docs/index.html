@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeShave Playground — Instant AST Code Skeletonizer</title>
+  <title>CodeShave Playground — Universal Multi-Language Code Context Compressor</title>
   <link rel="icon" href="https://fav.farm/⚡" />
   <style>
     :root {
@@ -89,8 +89,9 @@
     .hero p {
       color: var(--text-muted);
       font-size: 1.05rem;
-      max-width: 680px;
+      max-width: 780px;
       margin: 0 auto;
+      line-height: 1.5;
     }
     .container {
       max-width: 1400px;
@@ -112,6 +113,8 @@
     .toolbar-left {
       display: flex;
       gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
     }
     .btn-tool {
       background: #1e293b;
@@ -122,8 +125,15 @@
       font-size: 0.8rem;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.15s ease;
     }
     .btn-tool:hover { background: #334155; color: #fff; }
+    .btn-tool.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
+    select.btn-tool {
+      outline: none;
+      cursor: pointer;
+      padding-right: 1.2rem;
+    }
     .editor-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -141,32 +151,31 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
     .panel-header {
       padding: 0.75rem 1.25rem;
-      background: #161f30;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
-      font-weight: 600;
+      background: rgba(17, 24, 39, 0.9);
+      font-size: 0.8rem;
+      font-weight: 700;
       color: var(--text-muted);
+      letter-spacing: 0.5px;
     }
     .badge-stat {
       color: var(--green);
-      background: rgba(52, 211, 153, 0.15);
-      padding: 0.25rem 0.65rem;
-      border-radius: 6px;
       font-weight: 700;
       font-size: 0.82rem;
     }
     textarea {
       flex: 1;
       width: 100%;
-      background: transparent;
-      color: #e2e8f0;
+      background: #090e1a;
       border: none;
+      color: #e2e8f0;
       padding: 1.25rem;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.88rem;
@@ -213,17 +222,31 @@
 
   <div class="hero">
     <h1>Shave 80% of Tokens in Real Time</h1>
-    <p>Paste any Python codebase below. CodeShave strips internal execution loops while preserving 100% syntactically valid classes, methods, docstrings, and type hints for LLM prompts.</p>
+    <p>Paste any codebase below (<b>Python, TypeScript, JavaScript, Go, Rust, Java, C++, C#</b>). CodeShave deterministically strips execution bodies while preserving 100% syntactically valid classes, methods, docstrings, and type signatures for LLM prompts.</p>
   </div>
 
   <div class="container">
     <div class="toolbar">
       <div class="toolbar-left">
-        <button id="load-sample-btn" class="btn-tool">Load Sample Code</button>
+        <label style="font-size:0.8rem; color:#94a3b8; font-weight:600; margin-right:4px;">Language:</label>
+        <select id="lang-select" class="btn-tool">
+          <option value="auto">⚡ Auto-Detect</option>
+          <option value="python">Python</option>
+          <option value="typescript">TypeScript / JavaScript</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="java">Java / C#</option>
+          <option value="cpp">C / C++</option>
+        </select>
+        <span style="color:#475569; margin: 0 4px;">|</span>
+        <button id="load-sample-py" class="btn-tool">Sample: Python</button>
+        <button id="load-sample-ts" class="btn-tool">Sample: TypeScript</button>
+        <button id="load-sample-go" class="btn-tool">Sample: Go</button>
+        <button id="load-sample-rust" class="btn-tool">Sample: Rust</button>
         <button id="clear-btn" class="btn-tool">Clear</button>
       </div>
       <div>
-        <span style="font-size:0.8rem; color:#64748b;">Instant AST Compression • Runs 100% in your browser</span>
+        <span id="engine-badge" style="font-size:0.8rem; color:#64748b;">Universal AST Compression • Runs 100% in your browser</span>
       </div>
     </div>
 
@@ -231,10 +254,10 @@
       <!-- Input Panel -->
       <div class="panel">
         <div class="panel-header">
-          <span>ORIGINAL PYTHON SOURCE</span>
+          <span id="input-title">ORIGINAL SOURCE CODE</span>
           <span id="input-stats">0 tokens</span>
         </div>
-        <textarea id="input-code" spellcheck="false" placeholder="Paste your Python source code here..."></textarea>
+        <textarea id="input-code" spellcheck="false" placeholder="Paste your code here (Python, TypeScript, Go, Rust, Java, C++, etc.)..."></textarea>
       </div>
 
       <!-- Output Panel -->
@@ -246,7 +269,7 @@
             <button id="copy-btn" class="btn-copy">Copy Skeleton</button>
           </div>
         </div>
-        <textarea id="output-code" spellcheck="false" readonly placeholder="Shaved skeleton will appear here..."></textarea>
+        <textarea id="output-code" spellcheck="false" readonly placeholder="Shaved structural skeleton will appear here instantly..."></textarea>
       </div>
     </div>
   </div>
@@ -256,7 +279,8 @@
   </footer>
 
   <script>
-    const SAMPLE_CODE = `import os
+    const SAMPLES = {
+      python: `import os
 import sys
 from typing import List, Optional, Dict
 from dataclasses import dataclass
@@ -296,23 +320,144 @@ class SystemController:
         """Asynchronously dispatches notification payload to active subscribers."""
         raw_json = str(payload)
         print(f"Dispatching {event_name}: {raw_json}")
-`;
+`,
+
+      typescript: `import { useState, useEffect } from 'react';
+import type { TelemetryConfig } from './config';
+
+export interface UserProfile {
+    id: string;
+    username: string;
+    email: string;
+    roles: string[];
+}
+
+export class UserService {
+    private apiEndpoint: string;
+
+    constructor(endpoint: string) {
+        this.apiEndpoint = endpoint;
+        console.log("Initialized telemetry with " + endpoint);
+    }
+
+    public async getUser(id: string): Promise<UserProfile> {
+        const response = await fetch(\`\${this.apiEndpoint}/users/\${id}\`);
+        if (!response.ok) {
+            throw new Error(\`Failed to fetch user: \${response.statusText}\`);
+        }
+        const data = await response.json();
+        return data as UserProfile;
+    }
+
+    public validateEmail(email: string): boolean {
+        const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+        return regex.test(email);
+    }
+}
+
+export const formatUserName = (user: UserProfile): string => {
+    return user.username.toUpperCase();
+};
+`,
+
+      go: `package main
+
+import (
+    "fmt"
+    "net/http"
+    "time"
+)
+
+type ServerConfig struct {
+    Host    string
+    Port    int
+    Timeout time.Duration
+}
+
+type APIServer struct {
+    config ServerConfig
+    router *http.ServeMux
+}
+
+func NewAPIServer(cfg ServerConfig) *APIServer {
+    return &APIServer{
+        config: cfg,
+        router: http.NewServeMux(),
+    }
+}
+
+func (s *APIServer) Start() error {
+    addr := fmt.Sprintf("%s:%d", s.config.Host, s.config.Port)
+    println("Starting HTTP listener on " + addr)
+    return http.ListenAndServe(addr, s.router)
+}
+`,
+
+      rust: `use std::collections::HashMap;
+use std::time::Duration;
+
+pub struct CacheManager<K, V> {
+    store: HashMap<K, V>,
+    ttl: Duration,
+}
+
+impl<K: std::hash::Hash + Eq, V: Clone> CacheManager<K, V> {
+    pub fn new(ttl: Duration) -> Self {
+        CacheManager {
+            store: HashMap::new(),
+            ttl,
+        }
+    }
+
+    pub fn insert(&mut self, key: K, value: V) {
+        self.store.insert(key, value);
+    }
+
+    pub fn get(&self, key: &K) -> Option<V> {
+        self.store.get(key).cloned()
+    }
+}
+`
+    };
 
     const inputArea = document.getElementById('input-code');
     const outputArea = document.getElementById('output-code');
     const inputStats = document.getElementById('input-stats');
     const outputStats = document.getElementById('output-stats');
+    const inputTitle = document.getElementById('input-title');
     const copyBtn = document.getElementById('copy-btn');
-    const sampleBtn = document.getElementById('load-sample-btn');
     const clearBtn = document.getElementById('clear-btn');
+    const langSelect = document.getElementById('lang-select');
 
     function estimateTokens(text) {
       if (!text || text.trim() === '') return 0;
       return Math.max(1, Math.round(text.length / 3.7));
     }
 
-    function shaveCode(source) {
-      if (!source || source.trim() === '') return '';
+    function detectLang(source) {
+      const sample = source.slice(0, 1500);
+      if (/^\s*(def |async def |class \w+:|import \w+|from \w+ import)/m.test(sample)) {
+        return 'python';
+      }
+      if (/package\s+\w+|func\s+\(/.test(sample)) {
+        return 'go';
+      }
+      if (/fn\s+\w+|impl\s+|use\s+std::/.test(sample)) {
+        return 'rust';
+      }
+      if (/import\s+type\s+|interface\s+\w+|export\s+const\s+|export\s+function|const\s+\w+\s*=.*=>/.test(sample)) {
+        return 'typescript';
+      }
+      if (/public\s+class\s+|public\s+static\s+void\s+main/.test(sample)) {
+        return 'java';
+      }
+      if (/#include\s+<|std::/.test(sample)) {
+        return 'cpp';
+      }
+      return 'curly';
+    }
+
+    function shavePython(source) {
       const lines = source.split(/\r?\n/);
       const result = [];
       let skippingBody = false;
@@ -343,14 +488,11 @@ class SystemController:
           continue;
         }
 
-        // Check if inside function body
         if (skippingBody) {
           if (indent >= bodyIndent) {
-            // Check for docstring
             if (trimmed.startsWith('"""') || trimmed.startsWith("'''")) {
               const marker = trimmed.substring(0, 3);
               if (trimmed.length > 3 && trimmed.slice(3).includes(marker)) {
-                // Single-line docstring
                 result.push(line);
                 result.push(' '.repeat(bodyIndent) + '...');
               } else {
@@ -365,7 +507,6 @@ class SystemController:
           }
         }
 
-        // Function or method header
         if (trimmed.startsWith('def ') || trimmed.startsWith('async def ')) {
           result.push(line);
           skippingBody = true;
@@ -393,15 +534,205 @@ class SystemController:
       return result.join('\n');
     }
 
+    function isFunctionHeader(stmt) {
+      const clean = stmt.trim();
+      if (!clean) return false;
+      if (/\b(class|interface|struct|enum|namespace|trait|impl)\b/.test(clean)) return false;
+      if (/^(import|export)\s*\{/.test(clean)) return false;
+      if (/\btype\s+\w+\s*=\s*$/.test(clean) || /\btype\s+\w+\s*=\s*\{/.test(clean)) return false;
+      if (clean.includes(')') || clean.includes('=>')) return true;
+      if (/\b(fn|func|function|constructor|get|set)\b/.test(clean)) return true;
+      if (/\b(if|for|while|switch|catch)\s*\(/.test(clean)) return true;
+      return false;
+    }
+
+    function shaveCurly(source) {
+      const n = source.length;
+      let i = 0;
+      const result = [];
+      let statementBuf = [];
+      let inSingleComment = false;
+      let inMultiComment = false;
+      let inString = null;
+
+      while (i < n) {
+        const char = source[i];
+
+        if (!inString) {
+          if (!inMultiComment && !inSingleComment) {
+            if (char === '/' && i + 1 < n && source[i + 1] === '/') {
+              inSingleComment = true;
+              result.push('//');
+              i += 2;
+              continue;
+            } else if (char === '/' && i + 1 < n && source[i + 1] === '*') {
+              inMultiComment = true;
+              result.push('/*');
+              i += 2;
+              continue;
+            }
+          } else if (inSingleComment) {
+            result.push(char);
+            if (char === '\n') {
+              inSingleComment = false;
+              statementBuf = [];
+            }
+            i += 1;
+            continue;
+          } else if (inMultiComment) {
+            result.push(char);
+            if (char === '*' && i + 1 < n && source[i + 1] === '/') {
+              result.push('/');
+              inMultiComment = false;
+              i += 2;
+              continue;
+            }
+            i += 1;
+            continue;
+          }
+        }
+
+        if (!inSingleComment && !inMultiComment) {
+          if (inString) {
+            result.push(char);
+            if (char === '\\') {
+              if (i + 1 < n) {
+                result.push(source[i + 1]);
+                i += 2;
+                continue;
+              }
+            } else if (char === inString) {
+              inString = null;
+            }
+            i += 1;
+            continue;
+          } else {
+            if (char === '"' || char === "'" || char === '`') {
+              inString = char;
+              result.push(char);
+              i += 1;
+              continue;
+            }
+          }
+        }
+
+        if (char === '{') {
+          const stmtText = statementBuf.join('').trim();
+          if (isFunctionHeader(stmtText)) {
+            let depth = 1;
+            let j = i + 1;
+            let innerStr = null;
+            let innerSComm = false;
+            let innerMComm = false;
+
+            while (j < n && depth > 0) {
+              const c = source[j];
+              if (!innerStr) {
+                if (!innerMComm && !innerSComm) {
+                  if (c === '/' && j + 1 < n && source[j + 1] === '/') {
+                    innerSComm = true;
+                    j += 2;
+                    continue;
+                  } else if (c === '/' && j + 1 < n && source[j + 1] === '*') {
+                    innerMComm = true;
+                    j += 2;
+                    continue;
+                  } else if (c === '"' || c === "'" || c === '`') {
+                    innerStr = c;
+                    j += 1;
+                    continue;
+                  } else if (c === '{') {
+                    depth += 1;
+                  } else if (c === '}') {
+                    depth -= 1;
+                  }
+                } else if (innerSComm) {
+                  if (c === '\n') innerSComm = false;
+                } else if (innerMComm) {
+                  if (c === '*' && j + 1 < n && source[j + 1] === '/') {
+                    innerMComm = false;
+                    j += 2;
+                    continue;
+                  }
+                }
+              } else {
+                if (c === '\\') {
+                  j += 2;
+                  continue;
+                } else if (c === innerStr) {
+                  innerStr = null;
+                }
+              }
+              j += 1;
+            }
+
+            result.push('{ /* ... */ }');
+            statementBuf = [];
+            i = j;
+            continue;
+          } else {
+            result.push('{');
+            statementBuf = [];
+            i += 1;
+            continue;
+          }
+        } else if (char === '}') {
+          result.push('}');
+          statementBuf = [];
+          i += 1;
+          continue;
+        } else if (char === ';' || char === '\n') {
+          statementBuf.push(char);
+          result.push(char);
+          if (char === ';') statementBuf = [];
+          else if (char === '\n' && statementBuf.join('').trim() === '') statementBuf = [];
+          i += 1;
+          continue;
+        } else {
+          statementBuf.push(char);
+          result.push(char);
+          i += 1;
+        }
+      }
+
+      return result.join('');
+    }
+
+    function shaveCode(source, chosenLang) {
+      if (!source || source.trim() === '') return '';
+      let lang = chosenLang;
+      if (!lang || lang === 'auto') {
+        lang = detectLang(source);
+      }
+
+      if (lang === 'python') {
+        return { skeleton: shavePython(source), detected: 'Python' };
+      } else {
+        const nameMap = {
+          typescript: 'TypeScript',
+          go: 'Go',
+          rust: 'Rust',
+          java: 'Java / C#',
+          cpp: 'C / C++',
+          curly: 'Multi-Language'
+        };
+        const detectedName = nameMap[lang] || 'Multi-Language';
+        return { skeleton: shaveCurly(source), detected: detectedName };
+      }
+    }
+
     function update() {
       const code = inputArea.value || '';
       const origTokens = estimateTokens(code);
-      const shaved = shaveCode(code);
+      const chosen = langSelect.value;
+      const res = shaveCode(code, chosen);
+      const shaved = res.skeleton || '';
       const compTokens = estimateTokens(shaved);
       const saved = Math.max(0, origTokens - compTokens);
       const pct = origTokens > 0 ? ((saved / origTokens) * 100).toFixed(1) : '0';
 
       outputArea.value = shaved;
+      inputTitle.innerText = origTokens > 0 ? `ORIGINAL SOURCE CODE [${res.detected}]` : 'ORIGINAL SOURCE CODE';
       inputStats.innerText = origTokens.toLocaleString() + ' tokens';
       outputStats.innerText = '-' + saved.toLocaleString() + ' tokens (-' + pct + '%)';
     }
@@ -410,9 +741,29 @@ class SystemController:
     inputArea.addEventListener('paste', function() { setTimeout(update, 20); });
     inputArea.addEventListener('keyup', update);
     inputArea.addEventListener('change', update);
+    langSelect.addEventListener('change', update);
 
-    sampleBtn.addEventListener('click', function() {
-      inputArea.value = SAMPLE_CODE;
+    document.getElementById('load-sample-py').addEventListener('click', function() {
+      inputArea.value = SAMPLES.python;
+      langSelect.value = 'python';
+      update();
+    });
+
+    document.getElementById('load-sample-ts').addEventListener('click', function() {
+      inputArea.value = SAMPLES.typescript;
+      langSelect.value = 'typescript';
+      update();
+    });
+
+    document.getElementById('load-sample-go').addEventListener('click', function() {
+      inputArea.value = SAMPLES.go;
+      langSelect.value = 'go';
+      update();
+    });
+
+    document.getElementById('load-sample-rust').addEventListener('click', function() {
+      inputArea.value = SAMPLES.rust;
+      langSelect.value = 'rust';
       update();
     });
 
@@ -428,8 +779,8 @@ class SystemController:
       setTimeout(function() { copyBtn.innerText = 'Copy Skeleton'; }, 1500);
     });
 
-    // Run on initial load
-    inputArea.value = SAMPLE_CODE;
+    // Initial load
+    inputArea.value = SAMPLES.python;
     update();
   </script>
 </body>

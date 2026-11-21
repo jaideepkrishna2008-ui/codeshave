@@ -1,5 +1,7 @@
 """
 CLI interface for CodeShave.
+High-speed, zero-loss AST & structural code context compressor for AI coding assistants.
+Supports Python, TypeScript, JavaScript, Go, Rust, Java, C++, C#, Swift, and more.
 """
 
 from __future__ import annotations
@@ -10,16 +12,20 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from codeshave import __version__
 from codeshave.clipboard import copy_to_clipboard
 from codeshave.estimator import compute_savings, estimate_tokens
 from codeshave.formatters import FileContextItem, format_bundle
 from codeshave.graph import DependencyResolver
+from codeshave.languages import (
+    EXTENSION_MAP,
+    SUPPORTED_EXTENSIONS,
+    compress_code,
+    detect_language,
+)
 from codeshave.mcp import run_mcp_server
-from codeshave.parser import compress_source
-
 
 DEFAULT_EXCLUDES = {
     ".git",
@@ -33,17 +39,54 @@ DEFAULT_EXCLUDES = {
     "build",
     "dist",
     "node_modules",
-    "tests",
+    "target",
+    "bin",
+    "obj",
+    ".next",
+    ".nuxt",
+    ".output",
+    "coverage",
+    ".turbo",
 }
 
 
-def find_python_files(target: Path, excludes: set[str]) -> List[Path]:
-    """Recursively finds all Python files excluding common build/test folders."""
+def parse_lang_filter(lang_str: Optional[str]) -> Optional[Set[str]]:
+    """Converts comma-separated language names or extensions to a set of extensions."""
+    if not lang_str:
+        return None
+    allowed: Set[str] = set()
+    for token in lang_str.split(","):
+        token = token.strip().lower()
+        if not token:
+            continue
+        if token.startswith("."):
+            allowed.add(token)
+        else:
+            # Match language name in EXTENSION_MAP
+            matched = False
+            for ext, name in EXTENSION_MAP.items():
+                if token in (name, ext.lstrip(".")):
+                    allowed.add(ext)
+                    matched = True
+            if not matched:
+                allowed.add(f".{token}")
+    return allowed
+
+
+def find_source_files(
+    target: Path, excludes: Set[str], extensions: Optional[Set[str]] = None
+) -> List[Path]:
+    """Recursively finds all supported source files excluding build and cache folders."""
+    allowed_exts = extensions or SUPPORTED_EXTENSIONS
     if target.is_file():
         return [target]
 
     found: List[Path] = []
-    for p in sorted(target.rglob("*.py")):
+    for p in sorted(target.rglob("*")):
+        if not p.is_file():
+            continue
+        if p.suffix.lower() not in allowed_exts:
+            continue
         parts = set(p.parts)
         if parts.intersection(excludes):
             continue
@@ -51,8 +94,11 @@ def find_python_files(target: Path, excludes: set[str]) -> List[Path]:
     return found
 
 
-def find_git_modified_files(repo_path: Path, staged: bool = False) -> List[Path]:
-    """Retrieves list of modified Python files in git working tree or index."""
+def find_git_modified_files(
+    repo_path: Path, staged: bool = False, extensions: Optional[Set[str]] = None
+) -> List[Path]:
+    """Retrieves list of modified source files in git working tree or index."""
+    allowed_exts = extensions or SUPPORTED_EXTENSIONS
     cmd = ["git", "diff", "--name-only"]
     if staged:
         cmd.append("--cached")
@@ -63,10 +109,9 @@ def find_git_modified_files(repo_path: Path, staged: bool = False) -> List[Path]
         files = []
         for line in proc.stdout.splitlines():
             line = line.strip()
-            if line.endswith(".py"):
-                p = (repo_path / line).resolve()
-                if p.is_file():
-                    files.append(p)
+            p = (repo_path / line).resolve()
+            if p.is_file() and p.suffix.lower() in allowed_exts:
+                files.append(p)
         return files
     except Exception:
         return []
@@ -84,22 +129,27 @@ def handle_pack(args: argparse.Namespace) -> int:
         for ex in args.exclude.split(","):
             excludes.add(ex.strip())
 
+    lang_exts = parse_lang_filter(getattr(args, "lang", None))
+
     if args.git or args.staged:
-        files = find_git_modified_files(target, staged=args.staged)
+        files = find_git_modified_files(target, staged=args.staged, extensions=lang_exts)
         if not files:
-            sys.stderr.write("No modified Python files detected in git working tree.\n")
+            sys.stderr.write("No modified source files detected in git working tree.\n")
             return 0
     else:
-        files = find_python_files(target, excludes)
+        files = find_source_files(target, excludes, extensions=lang_exts)
 
     if not files:
-        sys.stderr.write("No Python files found to process.\n")
+        sys.stderr.write("No source files found to process.\n")
         return 1
 
-    # Dependency resolution ordering
+    # Python dependency resolution ordering if applicable
     if target.is_dir() and not args.no_sort:
-        resolver = DependencyResolver(target)
-        files = resolver.sort_files_by_dependency(files)
+        try:
+            resolver = DependencyResolver(target)
+            files = resolver.sort_files_by_dependency(files)
+        except Exception:
+            pass
 
     items: List[FileContextItem] = []
     total_orig_tokens = 0
@@ -109,9 +159,9 @@ def handle_pack(args: argparse.Namespace) -> int:
     preserve_priv = not args.no_private
 
     if args.stats or not args.output:
-        sys.stderr.write(f"\n⚡ CodeShave v{__version__} — AST Structural Compressor\n")
+        sys.stderr.write(f"\n⚡ CodeShave v{__version__} — Universal Multi-Language Code Compressor\n")
         sys.stderr.write(f"Scanning: {target}\n\n")
-        header = f"{'FILE':<45} {'ORIGINAL':<12} {'SKELETON':<12} {'SAVINGS':<10}"
+        header = f"{'FILE':<45} {'LANG':<10} {'ORIGINAL':<12} {'SKELETON':<12} {'SAVINGS':<10}"
         sys.stderr.write(header + "\n")
         sys.stderr.write("─" * len(header) + "\n")
 
@@ -119,8 +169,9 @@ def handle_pack(args: argparse.Namespace) -> int:
         rel_path = f.relative_to(target) if target.is_dir() else f.name
         try:
             content = f.read_text(encoding="utf-8")
-            compressed = compress_source(
+            compressed = compress_code(
                 content,
+                filename_or_ext=f.name,
                 preserve_docstrings=preserve_docs,
                 preserve_private=preserve_priv,
             )
@@ -140,46 +191,50 @@ def handle_pack(args: argparse.Namespace) -> int:
                 )
             )
 
+            lang = detect_language(f.name, content)
             pct = ((1.0 - comp_t / orig_t) * 100.0) if orig_t > 0 else 0.0
             if args.stats or not args.output:
                 path_str = str(rel_path).replace("\\", "/")
                 if len(path_str) > 43:
                     path_str = "..." + path_str[-40:]
                 sys.stderr.write(
-                    f"{path_str:<45} {orig_t:>8,} t {comp_t:>8,} t {pct:>8.1f}%\n"
+                    f"{path_str:<45} {lang:<10} {orig_t:>8,} t {comp_t:>8,} t {pct:>8.1f}%\n"
                 )
-        except Exception as exc:
-            sys.stderr.write(f"Skipping {rel_path}: {exc}\n")
+        except Exception as e:
+            sys.stderr.write(f"Warning: Failed to process {rel_path}: {e}\n")
 
-    # Budget constraint handling
-    if args.budget and total_comp_tokens > args.budget and preserve_docs:
+    if not items:
+        sys.stderr.write("Error: No files could be compressed.\n")
+        return 1
+
+    # Token budget enforcement
+    if args.budget and total_comp_tokens > args.budget:
         sys.stderr.write(
-            f"\n⚠ Exceeded token budget ({total_comp_tokens:,} > {args.budget:,}). "
-            "Auto-stripping docstrings to fit...\n"
+            f"\n⚠ Warning: Skeleton tokens ({total_comp_tokens:,}) exceed budget ({args.budget:,}). "
+            f"Applying aggressive budget pruning...\n"
         )
-        total_comp_tokens = 0
         for item in items:
-            item.compressed_code = compress_source(
-                item.original_code,
-                preserve_docstrings=False,
-                preserve_private=preserve_priv,
-            )
-            item.compressed_tokens = estimate_tokens(item.compressed_code)
-            total_comp_tokens += item.compressed_tokens
+            lines = item.compressed_code.splitlines()
+            if len(lines) > 20:
+                item.compressed_code = "\n".join(lines[:20]) + "\n... [truncated to fit token budget]"
+                item.compressed_tokens = estimate_tokens(item.compressed_code)
 
-    elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-    saved = max(0, total_orig_tokens - total_comp_tokens)
-    overall_pct = (saved / total_orig_tokens * 100.0) if total_orig_tokens > 0 else 0.0
-    dollars_saved = (saved / 1_000_000.0) * 3.00
+        total_comp_tokens = sum(it.compressed_tokens for it in items)
+
+    elapsed = time.perf_counter() - start_time
+    total_saved = max(0, total_orig_tokens - total_comp_tokens)
+    total_pct = (
+        (total_saved / total_orig_tokens) * 100.0 if total_orig_tokens > 0 else 0.0
+    )
 
     if args.stats or not args.output:
         sys.stderr.write("─" * len(header) + "\n")
         sys.stderr.write(
-            f"TOTALS ({len(items)} files in {elapsed_ms:.1f}ms):\n"
-            f"  • Original:     {total_orig_tokens:,} tokens\n"
-            f"  • Compressed:   {total_comp_tokens:,} tokens\n"
-            f"  • Reduction:    {saved:,} tokens saved ({overall_pct:.1f}% savings)\n"
-            f"  • Est. Value:   ${dollars_saved:.4f} per prompt call\n\n"
+            f"{'TOTAL':<45} {'':<10} {total_orig_tokens:>8,} t {total_comp_tokens:>8,} t {total_pct:>8.1f}%\n\n"
+        )
+        sys.stderr.write(
+            f"✔ Processed {len(items)} files in {elapsed * 1000.0:.1f}ms\n"
+            f"✔ Total token savings: {total_saved:,} tokens ({total_pct:.1f}% reduction)\n"
         )
 
     bundled = format_bundle(items, output_format=args.format)
@@ -202,22 +257,29 @@ def handle_clip(args: argparse.Namespace) -> int:
         sys.stderr.write(f"Error: Target path '{args.path}' does not exist.\n")
         return 1
 
+    lang_exts = parse_lang_filter(getattr(args, "lang", None))
+
     if args.git or args.staged:
-        files = find_git_modified_files(target, staged=args.staged)
+        files = find_git_modified_files(target, staged=args.staged, extensions=lang_exts)
     elif target.is_file():
         files = [target]
     else:
-        files = find_python_files(target, DEFAULT_EXCLUDES)
+        files = find_source_files(target, DEFAULT_EXCLUDES, extensions=lang_exts)
 
     if not files:
-        sys.stderr.write("No Python files found to clip.\n")
+        sys.stderr.write("No source files found to clip.\n")
         return 1
 
     if len(files) == 1 and target.is_file():
         content = target.read_text(encoding="utf-8")
-        compressed = compress_source(content, preserve_docstrings=not args.no_docs)
+        compressed = compress_code(
+            content,
+            filename_or_ext=target.name,
+            preserve_docstrings=not args.no_docs,
+        )
+        lang = detect_language(target.name, content)
         report = compute_savings(content, compressed)
-        formatted = f"# File: {target.name}\n```python\n{compressed}\n```\n"
+        formatted = f"# File: {target.name}\n```{lang}\n{compressed}\n```\n"
         copy_to_clipboard(formatted)
         sys.stderr.write(
             f"✔ Copied to clipboard! {report.summary_line()} "
@@ -232,7 +294,11 @@ def handle_clip(args: argparse.Namespace) -> int:
         for f in files:
             rel = f.relative_to(target) if target.is_dir() else f.name
             code = f.read_text(encoding="utf-8")
-            comp = compress_source(code, preserve_docstrings=not args.no_docs)
+            comp = compress_code(
+                code,
+                filename_or_ext=f.name,
+                preserve_docstrings=not args.no_docs,
+            )
             ot = estimate_tokens(code)
             ct = estimate_tokens(comp)
             total_orig += ot
@@ -259,7 +325,11 @@ def handle_diff(args: argparse.Namespace) -> int:
         return 1
 
     content = target.read_text(encoding="utf-8")
-    compressed = compress_source(content, preserve_docstrings=not args.no_docs)
+    compressed = compress_code(
+        content,
+        filename_or_ext=target.name,
+        preserve_docstrings=not args.no_docs,
+    )
     report = compute_savings(content, compressed)
 
     orig_lines = content.splitlines(keepends=True)
@@ -274,18 +344,16 @@ def handle_diff(args: argparse.Namespace) -> int:
         )
     )
 
-    sys.stdout.write(f"\n⚡ CodeShave Diff for {target.name}\n")
+    lang = detect_language(target.name, content)
+    sys.stdout.write(f"\n⚡ CodeShave Diff for {target.name} ({lang.capitalize()})\n")
     sys.stdout.write(f"{report.summary_line()}\n\n")
 
     for line in diff:
         if line.startswith("+") and not line.startswith("+++"):
-            # Green
             sys.stdout.write(f"\033[32m{line}\033[0m")
         elif line.startswith("-") and not line.startswith("---"):
-            # Red / Shaved
             sys.stdout.write(f"\033[31m{line}\033[0m")
         elif line.startswith("@@"):
-            # Cyan
             sys.stdout.write(f"\033[36m{line}\033[0m")
         else:
             sys.stdout.write(line)
@@ -301,10 +369,15 @@ def handle_inspect(args: argparse.Namespace) -> int:
         return 1
 
     content = target.read_text(encoding="utf-8")
-    compressed = compress_source(content, preserve_docstrings=not args.no_docs)
+    compressed = compress_code(
+        content,
+        filename_or_ext=target.name,
+        preserve_docstrings=not args.no_docs,
+    )
     report = compute_savings(content, compressed)
+    lang = detect_language(target.name, content)
 
-    sys.stdout.write(f"# Compressed AST Skeleton for {target.name}\n")
+    sys.stdout.write(f"# Compressed Skeleton for {target.name} ({lang.capitalize()})\n")
     sys.stdout.write(f"# {report.summary_line()}\n\n")
     sys.stdout.write(compressed + "\n")
     return 0
@@ -313,7 +386,7 @@ def handle_inspect(args: argparse.Namespace) -> int:
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="codeshave",
-        description="⚡ CodeShave: Zero-loss AST code context compressor for AI coding assistants.",
+        description="⚡ CodeShave: Universal AST & structural code context compressor for AI coding assistants.",
     )
     parser.add_argument("-v", "--version", action="version", version=f"codeshave {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -330,6 +403,7 @@ def main() -> None:
         help="Context bundle format (default: md)",
     )
     pack_p.add_argument("--budget", type=int, help="Target max token ceiling (auto-compresses to fit)")
+    pack_p.add_argument("--lang", help="Filter by language or extension (e.g. 'python', 'ts', 'go,rust')")
     pack_p.add_argument("--git", action="store_true", help="Compress only git-modified files")
     pack_p.add_argument("--staged", action="store_true", help="Compress only git staged changes")
     pack_p.add_argument("--no-docs", action="store_true", help="Omit docstrings for maximum token savings")
@@ -341,18 +415,19 @@ def main() -> None:
     # Clip command
     clip_p = subparsers.add_parser("clip", help="Compress and copy directly to OS clipboard (ready to paste)")
     clip_p.add_argument("path", nargs="?", default=".", help="Source file or directory to compress and copy")
+    clip_p.add_argument("--lang", help="Filter by language or extension")
     clip_p.add_argument("--git", action="store_true", help="Clip only git-modified files")
     clip_p.add_argument("--staged", action="store_true", help="Clip only git staged changes")
     clip_p.add_argument("--no-docs", action="store_true", help="Omit docstrings")
 
     # Diff command
     diff_p = subparsers.add_parser("diff", help="View colored terminal diff showing shaved lines")
-    diff_p.add_argument("path", help="Target Python file to diff")
+    diff_p.add_argument("path", help="Target source file to diff")
     diff_p.add_argument("--no-docs", action="store_true", help="Omit docstrings")
 
     # Inspect command
     inspect_p = subparsers.add_parser("inspect", help="Inspect compressed skeleton of a single file")
-    inspect_p.add_argument("path", help="Target Python file")
+    inspect_p.add_argument("path", help="Target source file")
     inspect_p.add_argument("--no-docs", action="store_true", help="Omit docstrings")
 
     # MCP command

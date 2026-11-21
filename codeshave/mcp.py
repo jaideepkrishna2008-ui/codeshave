@@ -1,6 +1,7 @@
 """
 Standard Model Context Protocol (MCP) server for CodeShave.
 Runs over standard I/O (stdio) and integrates with Claude Desktop, Cursor, and Windsurf.
+Supports compressing source code across Python, TypeScript, JavaScript, Go, Rust, Java, C++, and more.
 """
 
 import json
@@ -10,25 +11,30 @@ from typing import Any, Dict
 
 from codeshave import __version__
 from codeshave.estimator import compute_savings
-from codeshave.parser import compress_source
+from codeshave.languages import compress_code, detect_language
 
 
 def create_tool_definitions() -> list[Dict[str, Any]]:
     return [
         {
             "name": "shave_code",
-            "description": "Compress raw Python source code into a syntax-valid AST skeleton for prompts.",
+            "description": "Compress raw source code (Python, TypeScript, JS, Go, Rust, Java, C++, etc.) into a structural skeleton for LLM prompts.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
                     "source_code": {
                         "type": "string",
-                        "description": "Raw Python code to compress",
+                        "description": "Raw source code to compress",
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Programming language (e.g. 'python', 'typescript', 'go', 'rust', 'java', 'cpp', or auto-detect)",
+                        "default": "auto",
                     },
                     "preserve_docstrings": {
                         "type": "boolean",
                         "default": True,
-                        "description": "Whether to preserve function and class docstrings",
+                        "description": "Whether to preserve function, class, and method docstrings/comments",
                     },
                 },
                 "required": ["source_code"],
@@ -36,13 +42,13 @@ def create_tool_definitions() -> list[Dict[str, Any]]:
         },
         {
             "name": "shave_file",
-            "description": "Read a file from disk and return its compressed AST skeleton.",
+            "description": "Read any source code file from disk and return its compressed structural skeleton.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
                     "file_path": {
                         "type": "string",
-                        "description": "Absolute or relative path to the Python file",
+                        "description": "Absolute or relative path to the source file",
                     },
                     "preserve_docstrings": {
                         "type": "boolean",
@@ -61,12 +67,15 @@ def handle_call_tool(params: Dict[str, Any]) -> Dict[str, Any]:
 
     if name == "shave_code":
         code = args.get("source_code", "")
+        lang_arg = args.get("language", "auto")
         preserve_docs = args.get("preserve_docstrings", True)
-        skeleton = compress_source(code, preserve_docstrings=preserve_docs)
+
+        lang = detect_language(lang_arg, code) if lang_arg == "auto" else lang_arg
+        skeleton = compress_code(code, filename_or_ext=lang, preserve_docstrings=preserve_docs)
         report = compute_savings(code, skeleton)
         text = (
-            f"# Compressed by CodeShave ({report.summary_line()})\n\n"
-            f"```python\n{skeleton}\n```"
+            f"# Compressed by CodeShave ({lang.capitalize()}) - {report.summary_line()}\n\n"
+            f"```{lang}\n{skeleton}\n```"
         )
         return {
             "content": [{"type": "text", "text": text}],
@@ -82,11 +91,12 @@ def handle_call_tool(params: Dict[str, Any]) -> Dict[str, Any]:
             }
         code = p.read_text(encoding="utf-8")
         preserve_docs = args.get("preserve_docstrings", True)
-        skeleton = compress_source(code, preserve_docstrings=preserve_docs)
+        lang = detect_language(p.name, code)
+        skeleton = compress_code(code, filename_or_ext=p.name, preserve_docstrings=preserve_docs)
         report = compute_savings(code, skeleton)
         text = (
-            f"# File: {p.name} ({report.summary_line()})\n\n"
-            f"```python\n{skeleton}\n```"
+            f"# File: {p.name} ({lang.capitalize()}) - {report.summary_line()}\n\n"
+            f"```{lang}\n{skeleton}\n```"
         )
         return {
             "content": [{"type": "text", "text": text}],
@@ -100,54 +110,65 @@ def handle_call_tool(params: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def run_mcp_server() -> None:
-    """Standard stdio JSON-RPC 2.0 loop."""
-    sys.stderr.write(f"⚡ CodeShave MCP Server v{__version__} listening on stdio...\n")
+    """Runs standard JSON-RPC 2.0 loop reading from stdin and writing to stdout."""
     while True:
-        line = sys.stdin.readline()
-        if not line:
-            break
-        line = line.strip()
-        if not line:
-            continue
-
         try:
-            req = json.loads(line)
-        except Exception:
-            continue
+            line = sys.stdin.readline()
+            if not line:
+                break
+            msg = json.loads(line)
+            req_id = msg.get("id")
+            method = msg.get("method")
 
-        req_id = req.get("id")
-        method = req.get("method")
-        params = req.get("params", {})
+            if method == "initialize":
+                res = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "protocolVersion": "2024-11-05",
+                        "serverInfo": {
+                            "name": "codeshave",
+                            "version": __version__,
+                        },
+                        "capabilities": {
+                            "tools": {},
+                        },
+                    },
+                }
+            elif method == "tools/list":
+                res = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "tools": create_tool_definitions(),
+                    },
+                }
+            elif method == "tools/call":
+                call_res = handle_call_tool(msg.get("params", {}))
+                res = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": call_res,
+                }
+            elif method == "notifications/initialized":
+                continue
+            else:
+                res = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "error": {
+                        "code": -32601,
+                        "message": f"Method '{method}' not found",
+                    },
+                }
 
-        if method == "initialize":
-            resp = {
+            sys.stdout.write(json.dumps(res) + "\n")
+            sys.stdout.flush()
+        except Exception as e:
+            err_res = {
                 "jsonrpc": "2.0",
-                "id": req_id,
-                "result": {
-                    "protocolVersion": "2024-11-05",
-                    "capabilities": {"tools": {}},
-                    "serverInfo": {"name": "codeshave", "version": __version__},
-                },
+                "id": None,
+                "error": {"code": -32603, "message": str(e)},
             }
-        elif method == "tools/list":
-            resp = {
-                "jsonrpc": "2.0",
-                "id": req_id,
-                "result": {"tools": create_tool_definitions()},
-            }
-        elif method == "tools/call":
-            result = handle_call_tool(params)
-            resp = {
-                "jsonrpc": "2.0",
-                "id": req_id,
-                "result": result,
-            }
-        else:
-            resp = {
-                "jsonrpc": "2.0",
-                "id": req_id,
-                "error": {"code": -32601, "message": "Method not found"},
-            }
-
-        sys.stdout.write(json.dumps(resp) + "\n")
-        sys.stdout.flush()
+            sys.stdout.write(json.dumps(err_res) + "\n")
+            sys.stdout.flush()

@@ -82,3 +82,23 @@ def test_mcp_tools():
     })
     assert res["isError"] is False
     assert "def hello():" in res["content"][0]["text"]
+
+
+def test_cli_pack_polyglot(tmp_path: Path, monkeypatch):
+    (tmp_path / "app.py").write_text("def py_fn():\n    x = 10\n    return x\n")
+    (tmp_path / "service.ts").write_text("export function tsFn(): void {\n    console.log('hi');\n}\n")
+    (tmp_path / "main.go").write_text("package main\nfunc GoFn() {\n    println(1)\n}\n")
+
+    out_file = tmp_path / "polyglot.md"
+    test_args = ["codeshave", "pack", str(tmp_path), "-o", str(out_file), "-f", "md"]
+    monkeypatch.setattr(sys, "argv", test_args)
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 0
+    content = out_file.read_text()
+    assert "def py_fn():" in content
+    assert "export function tsFn(): void {" in content
+    assert "func GoFn() {" in content
+

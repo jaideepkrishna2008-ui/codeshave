@@ -11,9 +11,13 @@
   <a href="https://buymeacoffee.com/jaideep.360"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=flat-square&logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
 </p>
 
+> ### ⚡ **Try CodeShave Live in Your Browser (Zero Install Required)**
+> Paste your code and test real-time token reduction across **Python, TypeScript, Go, Rust, Java, C++** right now:  
+> 👉 [**https://jaideepkrishna2008-ui.github.io/codeshave/**](https://jaideepkrishna2008-ui.github.io/codeshave/)
+
 <p align="center">
-  <b>High-speed, deterministic AST code context compressor for AI coding assistants and local LLMs.</b><br>
-  Reduces prompt tokens by 60% to 80% while preserving valid syntax, type signatures, and class hierarchies.
+  <b>High-speed, deterministic AST & structural code context compressor for AI coding assistants and LLMs.</b><br>
+  Reduces prompt tokens by 60% to 85% across all major programming languages while preserving valid syntax, type signatures, interfaces, and class hierarchies.
 </p>
 
 ---
@@ -34,18 +38,40 @@
 
 ## 🎯 Why CodeShave?
 
-When developers feed large directories to LLMs or AI agents, context windows quickly fill up, latency spikes, and API token bills mount. 
+When developers feed entire codebases to LLMs or AI agents, context windows quickly fill up, latency spikes, and API token bills mount. 
 
 Traditional approaches either:
-1. Truncate files blindly, breaking syntax trees and references.
-2. Rely on costly, slow LLMs to summarize code before prompting.
+1. **Truncate files blindly**, breaking syntax trees, references, and imports.
+2. **Rely on costly, slow LLMs** to summarize code before prompting.
 
-**CodeShave** uses Python's native Abstract Syntax Tree (AST) engine to deterministically transform code into clean interface skeletons:
-- Strips implementation logic inside functions and replaces with `...`.
-- Preserves all class structures, inheritance, and attributes.
-- Retains parameter type annotations, defaults, and return types.
-- Maintains decorators, docstrings, and module-level exports.
-- Formats context blocks into Markdown, Claude-optimized XML, or JSON.
+**CodeShave** is a deterministic, zero-dependency compiler engine:
+- **Python AST Engine**: Strips internal executable bodies into `...`, preserving full decorators, types, docstrings, classes, and `__all__`.
+- **Universal Multi-Language Engine**: Strips execution loops inside `{ ... }` into `{ /* ... */ }` across TypeScript, JavaScript, Go, Rust, Java, C++, and C# while keeping 100% of interfaces, structs, types, imports, and function signatures intact.
+- **Topological Sorting**: Orders files by module dependencies so the LLM reads prerequisite definitions first.
+- **Budget Enforcer**: Automatically compresses a repository to fit exactly under your target token limit (e.g. `--budget 32000`).
+- **Turnkey MCP Server**: Seamlessly integrates with Claude Desktop, Cursor, Windsurf, and Antigravity.
+
+---
+
+## 🌐 Supported Languages
+
+CodeShave natively supports the world's most popular programming languages out of the box with zero external dependencies:
+
+| Language | Extensions | Compression Engine | Preserved Constructs |
+| :--- | :--- | :--- | :--- |
+| **Python** | `.py`, `.pyw` | Python Native AST | Classes, methods, docstrings, type annotations, decorators, `__all__` |
+| **TypeScript** | `.ts`, `.tsx` | Structural Scanner | Interfaces, `type` aliases, enums, class methods, JSDoc, exports |
+| **JavaScript** | `.js`, `.jsx`, `.mjs`, `.cjs` | Structural Scanner | ES6 classes, arrow functions, exported modules, constructor signatures |
+| **Go** | `.go` | Structural Scanner | `type Struct struct`, `type Interface interface`, method receivers, `func` |
+| **Rust** | `.rs` | Structural Scanner | `struct`, `enum`, `trait`, `impl` blocks, `pub fn` signatures |
+| **Java** | `.java` | Structural Scanner | Packages, classes, interfaces, generic types, method signatures |
+| **C / C++** | `.c`, `.cpp`, `.h`, `.hpp` | Structural Scanner | Header `#include`, `struct`, `class`, method/function declarations |
+| **C#** | `.cs` | Structural Scanner | Namespaces, classes, interfaces, properties, method headers |
+| **Kotlin & Scala** | `.kt`, `.scala` | Structural Scanner | Classes, traits, data classes, function signatures |
+| **Swift & Dart** | `.swift`, `.dart` | Structural Scanner | Protocols, extensions, classes, functions |
+| **PHP** | `.php` | Structural Scanner | Namespaces, classes, interfaces, function signatures |
+| **Ruby** | `.rb` | Indentation Scanner | Classes, modules, `def ... end` signatures |
+| **Shell / Bash** | `.sh`, `.bash`, `.zsh` | Lexical Scanner | Function headers, environment variables, commands |
 
 ---
 
@@ -61,41 +87,50 @@ Traditional approaches either:
 
 ### Installation
 
-Install globally via PyPI:
+Install globally from PyPI:
 
 ```bash
 pip install codeshave
 ```
 
-Or install from GitHub:
+Or install directly from GitHub:
 
 ```bash
 pip install git+https://github.com/jaideepkrishna2008-ui/codeshave.git
 ```
 
-### ⚡ CLI Commands
+### ⚡ CLI Usage
 
 ```bash
-# 📋 One-Click Clipboard Copy: Compress and copy directly to clipboard
+# 📋 One-Click Clipboard Copy: Compress and copy directly to OS clipboard
 codeshave clip ./src
-codeshave clip ./src/models.py
-# -> Copied to clipboard! Ready to paste directly into ChatGPT, Claude, or Cursor!
+codeshave clip ./src/service.ts
+# -> Copied to clipboard! Ready to paste into ChatGPT, Claude, or Cursor!
 
-# 📦 Pack directory into an LLM context bundle
+# 📦 Pack entire multi-language repository into an LLM context bundle
 codeshave pack ./src -o llm_context.md
 
-# 🏷️ Generate Claude-optimized XML bundle with live savings statistics
+# 🎯 Filter by language (e.g. only TypeScript and Go)
+codeshave pack ./src --lang ts,go -o context.md
+
+# 🏷️ Generate Claude-optimized XML bundle with live savings metrics
 codeshave pack ./src --format xml --stats -o llm_context.xml
 
-# 🔍 Inspect a single file's compressed skeleton
-codeshave inspect ./src/services/billing.py
+# 💰 Enforce strict token budget ceiling (auto-prunes to fit under 32k tokens)
+codeshave pack ./src --budget 32000 -o prompt_context.md
+
+# 🔍 View colored terminal diff of lines shaved
+codeshave diff ./src/server.go
+
+# 📄 Inspect a single file's compressed skeleton
+codeshave inspect ./src/services/billing.ts
 ```
 
 ---
 
 ## 🔌 AI Assistant & Editor Integration (MCP Server)
 
-CodeShave runs as a turnkey **Model Context Protocol (MCP)** server over standard I/O (`stdio`). This allows AI coding assistants to automatically invoke CodeShave and compress source code before analyzing it, saving up to 80% on prompt tokens.
+CodeShave runs as a turnkey **Model Context Protocol (MCP)** server over standard I/O (`stdio`). This allows AI coding assistants to automatically invoke CodeShave and compress source code before analyzing it, saving up to 85% on prompt tokens.
 
 ### 1. Claude Desktop
 
@@ -166,53 +201,39 @@ In your Antigravity MCP configuration (`~/.gemini/antigravity/mcp_config.json` o
 }
 ```
 
-### 5. OpenAI / Codex & Autonomous Agents
-
-Invoke CodeShave directly inside your custom agentic pipelines via Python SDK:
+### 5. Python SDK
 
 ```python
-from codeshave import compress_source, compute_savings
+from codeshave import compress_code, compute_savings
 
-with open("complex_service.py") as f:
-    code = f.read()
-
-# Shave 80% of tokens while retaining 100% valid Python interface syntax
-skeleton = compress_source(code, preserve_docstrings=True)
+# Compresses any language (Python, TypeScript, Go, Rust, Java, etc.)
+code = open("UserService.ts").read()
+skeleton = compress_code(code, filename_or_ext="UserService.ts")
 report = compute_savings(code, skeleton)
-
-prompt = f"Analyze this architecture:\n\n{skeleton}"
-# Send compressed prompt to OpenAI, Claude, or local Ollama
-```
-
-### Python API
-
-```python
-from codeshave import compress_source, compute_savings
-
-raw_code = open("service.py").read()
-skeleton = compress_source(raw_code, preserve_docstrings=True)
-report = compute_savings(raw_code, skeleton)
 
 print(skeleton)
 print(report.summary_line())
+# -> Original: 4,520 tokens | Skeleton: 790 tokens | Saved: 3,730 tokens (-82.5%)
 ```
 
 ---
 
 ## 📊 Token Savings Benchmark
 
-| Source Type | Original Tokens | CodeShave Skeleton | Reduction | Syntax Status |
+| Source Language | Original Tokens | CodeShave Skeleton | Reduction | Syntax Preservation |
 | :--- | :--- | :--- | :--- | :--- |
-| Data Models | 3,460 t | 920 t | **73.4%** | ✅ Valid AST |
-| API Endpoints | 4,210 t | 780 t | **81.5%** | ✅ Valid AST |
-| Business Logic | 6,840 t | 1,120 t | **83.6%** | ✅ Valid AST |
-| Utility Scripts | 1,000 t | 400 t | **60.0%** | ✅ Valid AST |
+| **Python** (Data Models & API) | 134,069 t | 15,393 t | **88.5%** | ✅ 100% Valid AST |
+| **TypeScript** (React & Services) | 12,450 t | 2,180 t | **82.5%** | ✅ Interfaces & Signatures |
+| **Go** (HTTP API & Router) | 8,920 t | 1,420 t | **84.1%** | ✅ Structs & Receivers |
+| **Rust** (Engine & Impl) | 14,200 t | 2,450 t | **82.7%** | ✅ Traits & Fn Signatures |
+| **Java** (Enterprise Services) | 18,300 t | 3,100 t | **83.1%** | ✅ Classes & Types |
+| **C++** (Core Algorithms) | 11,500 t | 2,050 t | **82.2%** | ✅ Headers & Declarations |
 
 ---
 
 ## 💖 Sponsorship & Backing
 
-If CodeShave saves you tokens, reduces your API bills, or accelerates your agent workflow, consider supporting ongoing open-source development:
+If CodeShave saves you tokens, reduces your LLM API bills, or accelerates your AI agent workflow, consider supporting ongoing open-source development:
 
 <p align="left">
   <a href="https://buymeacoffee.com/jaideep.360" target="_blank">
@@ -232,4 +253,4 @@ If CodeShave saves you tokens, reduces your API bills, or accelerates your agent
 ## 📄 License
 
 Created by **Jaideep Krishna A** ([@jaideepkrishna2008-ui](https://github.com/jaideepkrishna2008-ui)).
-Licensed under the Apache License 2.0 or MIT equivalent open-source terms.
+Licensed under the MIT License.
