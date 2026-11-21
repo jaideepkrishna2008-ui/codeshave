@@ -201,6 +201,40 @@ In your Antigravity MCP configuration (`~/.gemini/antigravity/mcp_config.json` o
 }
 ```
 
+---
+
+## ⚡ Triggering CodeShave with `@` and `/` in AI IDEs
+
+You can invoke CodeShave natively in your AI coding environment using `@` mentions, `/` slash commands, or automated rules:
+
+### 1. In Cursor IDE (Native `@codeshave` Mention)
+Once configured in `.cursor/mcp.json`, Cursor automatically registers `@codeshave` as a native context provider in the Composer and Chat:
+* Simply type **`@codeshave`** in Cursor Chat to attach CodeShave tools directly to your prompt.
+* Example: `> @codeshave inspect this repository and list all API endpoints`
+
+### 2. In Google Antigravity (Native `/codeshave` Slash Command)
+Type **`/codeshave`** in your chat input to activate the CodeShave compressor:
+* Example: `> /codeshave analyze Smartmonitor.pyw without bloating context`
+* Antigravity immediately triggers `shave_file`, extracting the structural skeleton at **90%+ token savings** in milliseconds.
+
+### 3. Automated Hands-Free Rules (Cursor, Claude, Windsurf, Codex)
+If you don't want to manually type `@` or `/` each time, drop a 1-line rule into your repo so your AI **always** defaults to CodeShave:
+
+* **Cursor IDE** (`.cursorrules`):
+  ```markdown
+  Always prioritize calling the `codeshave` MCP tool (`shave_file` or `shave_code`) when analyzing or exploring code to inspect AST skeletons (90%+ token savings) before reading raw files.
+  ```
+* **Claude Desktop** (`CLAUDE.md`):
+  ```markdown
+  Use `shave_file` from the codeshave MCP server to inspect code architecture without flooding the context window.
+  ```
+* **Windsurf Editor** (`.windsurfrules`):
+  ```markdown
+  When exploring project architecture or large files, always use CodeShave MCP (`shave_file`) first.
+  ```
+
+---
+
 ### 5. Python SDK
 
 ```python

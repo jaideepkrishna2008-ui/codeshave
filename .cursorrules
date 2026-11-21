@@ -1,0 +1,2 @@
+# CodeShave Context Rule for Cursor
+Always prioritize calling the `codeshave` MCP tool (`shave_file` or `shave_code`) when analyzing, searching, or exploring source code files (Python, TypeScript, JS, Go, Rust, Java, C++, C#). This loads the structural AST skeleton (90%+ token savings) before reading specific implementation ranges.

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}
