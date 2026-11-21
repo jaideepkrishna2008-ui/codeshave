@@ -1,6 +1,6 @@
 import ast
 import pytest
-from contextforge.parser import compress_source, extract_symbols
+from tokenskel.parser import compress_source, extract_symbols
 
 
 SAMPLE_CODE = '''

@@ -1,4 +1,4 @@
-from contextforge.estimator import compute_savings, estimate_tokens
+from tokenskel.estimator import compute_savings, estimate_tokens
 
 
 def test_estimate_tokens():

@@ -1,6 +1,6 @@
 """
 Example FastAPI application with authentication, database models, and analytics.
-Demonstrates ContextForge AST skeleton compression.
+Demonstrates TokenSkel AST skeleton compression.
 """
 
 from typing import List, Optional

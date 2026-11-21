@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "contextforge"
+name = "tokenskel"
 version = "0.1.0"
 description = "Deterministic AST code context compressor for AI coding assistants and local models"
 authors = [{ name = "Jaideep Krishna A", email = "jaideepkrishna2008@gmail.com" }]
@@ -12,4 +12,4 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
-contextforge = "contextforge.cli:main"
+tokenskel = "tokenskel.cli:main"

@@ -81,6 +81,6 @@
 
   <!-- Footer Tagline -->
   <text x="100" y="365" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13" fill="#64748b">
-    $ pip install contextforge &amp;&amp; contextforge pack ./src -o prompt_context.md
+    $ pip install tokenskel &amp;&amp; tokenskel pack ./src -o prompt_context.md
   </text>
 </svg>

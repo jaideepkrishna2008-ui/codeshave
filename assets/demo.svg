@@ -24,7 +24,7 @@
 
     <!-- Title Text -->
     <text x="500" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" font-weight="500" text-anchor="middle">
-      zsh - contextforge pack ./src --stats
+      zsh - tokenskel pack ./src --stats
     </text>
   </g>
 
@@ -32,11 +32,11 @@
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13" xml:space="preserve">
     <!-- Prompt Command Line -->
     <text x="75" y="110">
-      <tspan fill="#10b981" font-weight="700">user@devbox</tspan><tspan fill="#64748b">:</tspan><tspan fill="#38bdf8">~/fast-app</tspan><tspan fill="#f1f5f9">$ contextforge pack ./src --format xml --stats -o llm_context.xml</tspan>
+      <tspan fill="#10b981" font-weight="700">user@devbox</tspan><tspan fill="#64748b">:</tspan><tspan fill="#38bdf8">~/fast-app</tspan><tspan fill="#f1f5f9">$ tokenskel pack ./src --format xml --stats -o llm_context.xml</tspan>
     </text>
 
     <!-- Scan Progress Header -->
-    <text x="75" y="145" fill="#a78bfa" font-weight="700">⚡ ContextForge v0.1.0 — AST Structural Compressor</text>
+    <text x="75" y="145" fill="#a78bfa" font-weight="700">⚡ TokenSkel v0.1.0 — AST Structural Compressor</text>
     <text x="75" y="168" fill="#64748b">Scanning directory: ./src (recursive AST visitor initialized)</text>
 
     <!-- Table Header -->
