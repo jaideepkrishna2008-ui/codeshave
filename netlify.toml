@@ -1,0 +1,29 @@
+[build]
+  publish = "docs"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/github"
+  to = "https://github.com/jaideepkrishna2008-ui/codeshave"
+  status = 302
+
+[[redirects]]
+  from = "/vscode"
+  to = "https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave"
+  status = 302
+
+[[redirects]]
+  from = "/open-vsx"
+  to = "https://open-vsx.org/extension/jaks-360/codeshave"
+  status = 302
+
+[[redirects]]
+  from = "/pypi"
+  to = "https://pypi.org/project/codeshave/"
+  status = 302

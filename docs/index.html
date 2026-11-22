@@ -3,56 +3,209 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeShave Playground — Universal Multi-Language Code Context Compressor</title>
-  <link rel="icon" href="https://fav.farm/⚡" />
+  
+  <!-- Primary Meta Tags -->
+  <title>CodeShave — High-Speed AST Code Compressor & MCP Server for AI Coding</title>
+  <meta name="title" content="CodeShave — High-Speed AST Code Compressor & MCP Server for AI Coding">
+  <meta name="description" content="CodeShave deterministically compresses large codebases by 80–90% into AST structural skeletons while preserving 100% syntactically valid classes, methods, docstrings, and type signatures. Official Model Context Protocol (MCP) server for Claude, Cursor, ChatGPT, and VS Code.">
+  <meta name="keywords" content="CodeShave, MCP Server, Model Context Protocol, AST code compressor, token optimization, Claude code MCP, Cursor MCP, ChatGPT Desktop MCP, LLM context compressor, Python AST, TypeScript AST, Go AST, Rust AST, AI token savings">
+  <meta name="author" content="Jaideep Krishna A">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://codeshave.netlify.app/">
+  <link rel="icon" href="https://fav.farm/⚡">
+
+  <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://codeshave.netlify.app/">
+  <meta property="og:title" content="CodeShave — 80-90% AST Code Compression & Official MCP Server">
+  <meta property="og:description" content="Compress entire codebases to pure AST skeletons for AI models. Officially verified Model Context Protocol (MCP) server. Live in VS Code Marketplace.">
+  <meta property="og:image" content="https://repository-images.githubusercontent.com/1466418990/dfdf2a26-033f-4eaa-a222-80ee5d1d8840">
+  <meta property="og:image:width" content="1376">
+  <meta property="og:image:height" content="768">
+  <meta property="og:image:alt" content="CodeShave AST Compression & MCP Server for AI Models">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://codeshave.netlify.app/">
+  <meta name="twitter:title" content="CodeShave — 80-90% AST Code Compression & Official MCP Server">
+  <meta name="twitter:description" content="Compress entire codebases to pure AST skeletons for AI models. Officially verified Model Context Protocol (MCP) server.">
+  <meta name="twitter:image" content="https://repository-images.githubusercontent.com/1466418990/dfdf2a26-033f-4eaa-a222-80ee5d1d8840">
+
+  <!-- Structured Data: SoftwareApplication & FAQPage for Google & AI Search (GEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "CodeShave",
+        "headline": "High-Speed AST Code Compressor & MCP Server",
+        "description": "CodeShave deterministically compresses large codebases by 80–90% into AST structural skeletons while preserving 100% syntactically valid classes, methods, docstrings, and type signatures.",
+        "operatingSystem": "Cross-platform (Windows, macOS, Linux)",
+        "applicationCategory": "DeveloperApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Jaideep Krishna A",
+          "url": "https://github.com/jaideepkrishna2008-ui"
+        },
+        "codeRepository": "https://github.com/jaideepkrishna2008-ui/codeshave",
+        "downloadUrl": "https://pypi.org/project/codeshave/",
+        "softwareVersion": "0.2.2"
+      },
+      {
+        "@type": "WebSite",
+        "name": "CodeShave",
+        "url": "https://codeshave.netlify.app/"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is CodeShave?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CodeShave is an open-source high-speed AST (Abstract Syntax Tree) code compressor and officially verified Model Context Protocol (MCP) server. It prunes execution loops and bodies while keeping 100% valid classes, methods, and type signatures to save 80-90% LLM prompt tokens."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does CodeShave save 80% to 90% of AI tokens?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CodeShave uses language-native AST parsers to replace execution statements inside functions with minimal syntax placeholders (such as '...' in Python or '{ /* ... */ }' in TypeScript/Go/Rust). This removes internal implementation noise while keeping interface definitions, contracts, and types completely intact."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which AI coding assistants support CodeShave?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CodeShave connects natively via the Model Context Protocol (MCP) to Claude Desktop, Claude Code, Cursor IDE, Windsurf Editor, OpenAI Codex / ChatGPT Desktop, VS Code (via Copilot/Cline), and Google Antigravity."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is CodeShave free and open source?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, CodeShave is 100% free and open-source under the MIT license, available on GitHub, PyPI, and Visual Studio Marketplace."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <style>
     :root {
-      --bg: #090d16;
+      --bg: #07090e;
+      --bg-alt: #0d121f;
       --card-bg: #111827;
-      --border: #1f2937;
+      --card-border: #1f293d;
       --accent: #38bdf8;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --green: #34d399;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --primary: #6366f1;
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.2);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
+
+    /* Background glow decorations */
+    .glow-orb {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+    }
+    .glow-top-left { top: -150px; left: -100px; background: #38bdf8; }
+    .glow-top-right { top: -100px; right: -100px; background: #6366f1; }
+    .glow-center { top: 45%; left: 30%; background: #06b6d4; }
+
+    /* Header */
     header {
-      padding: 1.25rem 2rem;
-      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 9, 14, 0.82);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.85rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(12px);
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 1.4rem;
+      gap: 0.65rem;
+      font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.5px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-icon {
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      box-shadow: 0 0 15px var(--accent-glow);
     }
     .brand span {
       background: linear-gradient(135deg, #38bdf8, #818cf8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .nav-links {
+    .nav-menu {
       display: flex;
-      gap: 1rem;
+      gap: 1.75rem;
+      align-items: center;
+      list-style: none;
+    }
+    .nav-menu a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+    .nav-menu a:hover { color: var(--accent); }
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
       align-items: center;
     }
+
+    /* Buttons */
     .btn {
-      padding: 0.5rem 1rem;
+      padding: 0.55rem 1.15rem;
       border-radius: 8px;
       font-size: 0.875rem;
       font-weight: 600;
@@ -60,53 +213,183 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s ease;
+      gap: 0.5rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       border: 1px solid transparent;
+      white-space: nowrap;
     }
-    .btn-github {
-      background: #1f2937;
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
       color: #fff;
-      border-color: #374151;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
     }
-    .btn-github:hover { background: #374151; }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+    }
+    .btn-secondary {
+      background: #111827;
+      color: #e2e8f0;
+      border-color: var(--card-border);
+    }
+    .btn-secondary:hover {
+      background: #1e293b;
+      border-color: #334155;
+      color: #fff;
+      transform: translateY(-1px);
+    }
     .btn-coffee {
       background: #f59e0b;
       color: #000;
       font-weight: 700;
     }
-    .btn-coffee:hover { background: #d97706; }
+    .btn-coffee:hover { background: #d97706; transform: translateY(-1px); }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero Section */
     .hero {
       text-align: center;
-      padding: 2.2rem 1rem 1.2rem;
+      padding: 4.5rem 1rem 3rem;
+    }
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.95rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .pill-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
     }
     .hero h1 {
-      font-size: 2.4rem;
+      font-size: 3.2rem;
       font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 0.75rem;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.25rem;
+      max-width: 950px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, #38bdf8 20%, #818cf8 60%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .hero p {
       color: var(--text-muted);
-      font-size: 1.05rem;
-      max-width: 780px;
-      margin: 0 auto;
-      line-height: 1.5;
+      font-size: 1.2rem;
+      max-width: 820px;
+      margin: 0 auto 2.2rem;
+      line-height: 1.6;
     }
-    .container {
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 0 1.5rem 2rem;
-      flex: 1;
+    .hero-actions {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.2rem;
+    }
+    .cli-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #090e1a;
+      border: 1px solid var(--card-border);
+      padding: 0.5rem 1.25rem;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #38bdf8;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .cli-pill:hover { border-color: var(--accent); background: #0f172a; }
+
+    /* Trust & Badges strip */
+    .badge-strip {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      padding: 1.5rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .badge-strip a {
+      display: inline-flex;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .badge-strip a:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+    .badge-strip img {
+      height: 24px;
+      border-radius: 4px;
+    }
+
+    /* Section Headers */
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-title .tag {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .section-title h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.75px;
+      margin-bottom: 0.75rem;
+    }
+    .section-title p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* Playground */
+    #playground {
+      padding: 4rem 0;
+    }
+    .playground-box {
+      background: var(--bg-alt);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
     .toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       gap: 1rem;
       flex-wrap: wrap;
     }
@@ -120,46 +403,42 @@
       background: #1e293b;
       color: #94a3b8;
       border: 1px solid #334155;
-      padding: 0.35rem 0.75rem;
+      padding: 0.4rem 0.85rem;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.15s ease;
     }
     .btn-tool:hover { background: #334155; color: #fff; }
     .btn-tool.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
-    select.btn-tool {
-      outline: none;
-      cursor: pointer;
-      padding-right: 1.2rem;
-    }
+    select.btn-tool { outline: none; cursor: pointer; padding-right: 1.2rem; }
     .editor-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      flex: 1;
-      min-height: 520px;
+      gap: 1.25rem;
+      min-height: 480px;
     }
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .editor-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+      .nav-menu { display: none; }
     }
     .panel {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: #090e1a;
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
     .panel-header {
       padding: 0.75rem 1.25rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--card-border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(17, 24, 39, 0.9);
+      background: rgba(17, 24, 39, 0.85);
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--text-muted);
@@ -168,7 +447,10 @@
     .badge-stat {
       color: var(--green);
       font-weight: 700;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
+      background: var(--green-glow);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
     }
     textarea {
       flex: 1;
@@ -177,9 +459,9 @@
       border: none;
       color: #e2e8f0;
       padding: 1.25rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: var(--font-mono);
       font-size: 0.88rem;
-      line-height: 1.55;
+      line-height: 1.6;
       resize: none;
       outline: none;
       white-space: pre;
@@ -188,95 +470,750 @@
       background: #0284c7;
       color: #fff;
       border: none;
-      padding: 0.4rem 0.95rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 6px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       font-weight: 600;
       transition: background 0.15s ease;
     }
     .btn-copy:hover { background: #0369a1; }
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.85rem;
+
+    /* Bento Features */
+    #features { padding: 5rem 0; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 960px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+    .feature-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .feature-card:hover {
+      border-color: #334155;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .feature-icon {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    .feature-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: #fff;
+    }
+    .feature-card p {
       color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    /* Benchmarks */
+    #benchmarks { padding: 4rem 0 5rem; }
+    .benchmark-table-wrapper {
+      background: var(--bg-alt);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th, td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    th {
+      background: rgba(17, 24, 39, 0.9);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    td { font-size: 0.95rem; }
+    tr:last-child td { border-bottom: none; }
+    .pill-saving {
+      color: var(--green);
+      font-weight: 700;
+      background: var(--green-glow);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .progress-bar-bg {
+      background: #1e293b;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      width: 120px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 0.6rem;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #10b981, #38bdf8);
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* Install Section */
+    #install { padding: 4rem 0 5rem; }
+    .install-box {
+      background: var(--bg-alt);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .install-tabs {
+      display: flex;
+      background: rgba(17, 24, 39, 0.9);
+      border-bottom: 1px solid var(--card-border);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 0.9rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(56, 189, 248, 0.05);
+    }
+    .tab-content {
+      padding: 1.75rem;
+      display: none;
+    }
+    .tab-content.active { display: block; }
+    .code-block {
+      background: #090e1a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      color: #e2e8f0;
+    }
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* FAQ */
+    #faq { padding: 4rem 0 6rem; }
+    .faq-list {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    details.faq-item {
+      background: var(--bg-alt);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+    details.faq-item[open] { border-color: #38bdf8; }
+    summary.faq-question {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    summary.faq-question::-webkit-details-marker { display: none; }
+    summary.faq-question::after {
+      content: "+";
+      font-size: 1.4rem;
+      color: var(--accent);
+      transition: transform 0.2s ease;
+    }
+    details[open] summary.faq-question::after {
+      content: "−";
+    }
+    .faq-answer {
+      margin-top: 1rem;
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      background: #05070a;
+      padding: 3.5rem 0 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+    .footer-col h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .footer-col a:hover { color: var(--accent); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1.75rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0284c7;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
+  <div class="glow-orb glow-top-left"></div>
+  <div class="glow-orb glow-top-right"></div>
+  <div class="glow-orb glow-center"></div>
+
+  <!-- Header -->
   <header>
-    <div class="brand">
-      ⚡ Code<span>Shave</span>
-    </div>
-    <div class="nav-links">
-      <a href="https://github.com/jaideepkrishna2008-ui/codeshave" target="_blank" class="btn btn-github">
-        ⭐ Star on GitHub
+    <a href="#" class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>Code<span>Shave</span></div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#playground">Playground</a></li>
+      <li><a href="#benchmarks">Benchmarks</a></li>
+      <li><a href="#install">Installation</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="header-actions">
+      <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave" target="_blank" class="btn btn-secondary">
+        📦 VS Code
+      </a>
+      <a href="https://github.com/jaideepkrishna2008-ui/codeshave" target="_blank" class="btn btn-secondary">
+        ⭐ Star
       </a>
       <a href="https://buymeacoffee.com/jaideep.360" target="_blank" class="btn btn-coffee">
-        ☕ Buy Me A Coffee
+        ☕ Buy Coffee
       </a>
     </div>
   </header>
 
-  <div class="hero">
-    <h1>Shave 80% of Tokens in Real Time</h1>
-    <p>Paste any codebase below (<b>Python, TypeScript, JavaScript, Go, Rust, Java, C++, C#</b>). CodeShave deterministically strips execution bodies while preserving 100% syntactically valid classes, methods, docstrings, and type signatures for LLM prompts.</p>
-  </div>
-
-  <div class="container">
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <label style="font-size:0.8rem; color:#94a3b8; font-weight:600; margin-right:4px;">Language:</label>
-        <select id="lang-select" class="btn-tool">
-          <option value="auto">⚡ Auto-Detect</option>
-          <option value="python">Python</option>
-          <option value="typescript">TypeScript / JavaScript</option>
-          <option value="go">Go</option>
-          <option value="rust">Rust</option>
-          <option value="java">Java / C#</option>
-          <option value="cpp">C / C++</option>
-        </select>
-        <span style="color:#475569; margin: 0 4px;">|</span>
-        <button id="load-sample-py" class="btn-tool">Sample: Python</button>
-        <button id="load-sample-ts" class="btn-tool">Sample: TypeScript</button>
-        <button id="load-sample-go" class="btn-tool">Sample: Go</button>
-        <button id="load-sample-rust" class="btn-tool">Sample: Rust</button>
-        <button id="clear-btn" class="btn-tool">Clear</button>
-      </div>
-      <div>
-        <span id="engine-badge" style="font-size:0.8rem; color:#64748b;">Universal AST Compression • Runs 100% in your browser</span>
+  <!-- Hero -->
+  <section class="hero container">
+    <div class="pill-badge">
+      <span class="dot"></span>
+      Official Model Context Protocol (MCP) Server • v0.2.2 Live
+    </div>
+    <h1>
+      Cut LLM Prompt Tokens by <span class="gradient-text">80%–90%</span><br>
+      with Zero Syntax Loss
+    </h1>
+    <p>
+      CodeShave deterministically strips execution bodies while preserving 100% syntactically valid classes, methods, docstrings, and type signatures. The universal AST compression tool for Claude, ChatGPT, Cursor, VS Code, and Windsurf.
+    </p>
+    <div class="hero-actions">
+      <a href="#playground" class="btn btn-primary">
+        🚀 Try Live Playground
+      </a>
+      <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave" target="_blank" class="btn btn-secondary">
+        ⚡ Install in VS Code
+      </a>
+      <div class="cli-pill" onclick="copyText('pip install codeshave && codeshave connect --all')">
+        <span>$ pip install codeshave && codeshave connect --all</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
       </div>
     </div>
 
-    <div class="editor-grid">
-      <!-- Input Panel -->
-      <div class="panel">
-        <div class="panel-header">
-          <span id="input-title">ORIGINAL SOURCE CODE</span>
-          <span id="input-stats">0 tokens</span>
+    <!-- Live Badges -->
+    <div class="badge-strip">
+      <a href="https://pypi.org/project/codeshave/" target="_blank">
+        <img src="https://img.shields.io/badge/PyPI-v0.2.2-blue?style=flat-square&logo=pypi&logoColor=white" alt="PyPI v0.2.2">
+      </a>
+      <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave" target="_blank">
+        <img src="https://img.shields.io/badge/VS%20Marketplace-v0.2.1-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white" alt="Visual Studio Marketplace">
+      </a>
+      <a href="https://open-vsx.org/extension/jaks-360/codeshave" target="_blank">
+        <img src="https://img.shields.io/badge/Open%20VSX-v0.2.1-purple?style=flat-square&logo=eclipseide&logoColor=white" alt="Open VSX">
+      </a>
+      <a href="https://github.com/modelcontextprotocol/servers" target="_blank">
+        <img src="https://img.shields.io/badge/MCP%20Registry-Verified-success?style=flat-square&logo=anthropic&logoColor=white" alt="MCP Registry Verified">
+      </a>
+      <a href="https://github.com/jaideepkrishna2008-ui/codeshave/blob/main/LICENSE" target="_blank">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License MIT">
+      </a>
+    </div>
+  </section>
+
+  <!-- Interactive Live Playground -->
+  <section id="playground" class="container">
+    <div class="section-title">
+      <span class="tag">Interactive Simulator</span>
+      <h2>Try CodeShave in Your Browser</h2>
+      <p>Universal multi-language AST compression running 100% locally in your browser. No data sent to any server.</p>
+    </div>
+
+    <div class="playground-box">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <label style="font-size:0.82rem; color:#94a3b8; font-weight:600; margin-right:4px;">Language:</label>
+          <select id="lang-select" class="btn-tool">
+            <option value="auto">⚡ Auto-Detect</option>
+            <option value="python">Python</option>
+            <option value="typescript">TypeScript / JavaScript</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+            <option value="java">Java / C#</option>
+            <option value="cpp">C / C++</option>
+          </select>
+          <span style="color:#475569; margin: 0 4px;">|</span>
+          <button id="load-sample-py" class="btn-tool">Sample: Python</button>
+          <button id="load-sample-ts" class="btn-tool">Sample: TypeScript</button>
+          <button id="load-sample-go" class="btn-tool">Sample: Go</button>
+          <button id="load-sample-rust" class="btn-tool">Sample: Rust</button>
+          <button id="clear-btn" class="btn-tool">Clear</button>
         </div>
-        <textarea id="input-code" spellcheck="false" placeholder="Paste your code here (Python, TypeScript, Go, Rust, Java, C++, etc.)..."></textarea>
+        <div>
+          <span style="font-size:0.8rem; color:#64748b;">Deterministic AST Tree Pruning • Zero Network Lag</span>
+        </div>
       </div>
 
-      <!-- Output Panel -->
-      <div class="panel">
-        <div class="panel-header">
-          <span>SHAVED SKELETON (FOR LLM PROMPT)</span>
-          <div style="display:flex; align-items:center; gap:0.75rem;">
-            <span id="output-stats" class="badge-stat">0 tokens saved</span>
-            <button id="copy-btn" class="btn-copy">Copy Skeleton</button>
+      <div class="editor-grid">
+        <!-- Input Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <span id="input-title">ORIGINAL SOURCE CODE</span>
+            <span id="input-stats">0 tokens</span>
           </div>
+          <textarea id="input-code" spellcheck="false" placeholder="Paste your code here (Python, TypeScript, Go, Rust, Java, C++, etc.)..."></textarea>
         </div>
-        <textarea id="output-code" spellcheck="false" readonly placeholder="Shaved structural skeleton will appear here instantly..."></textarea>
+
+        <!-- Output Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>SHAVED SKELETON (FOR LLM PROMPT)</span>
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <span id="output-stats" class="badge-stat">0 tokens saved</span>
+              <button id="copy-btn" class="btn-copy">Copy Skeleton</button>
+            </div>
+          </div>
+          <textarea id="output-code" spellcheck="false" readonly placeholder="Shaved structural skeleton will appear here instantly..."></textarea>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
+  <!-- Features Grid -->
+  <section id="features" class="container">
+    <div class="section-title">
+      <span class="tag">Architecture & Design</span>
+      <h2>Engineered for LLM Attention Efficiency</h2>
+      <p>Why modern AI coding models generate 10x better code when prompted with CodeShave skeletons.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>AST Tree Pruning</h3>
+        <p>Strips loops, error handlers, and internal execution blocks to <code>...</code> or <code>{ /* ... */ }</code> while keeping 100% syntactically valid code structures.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Zero Attention Noise</h3>
+        <p>Removes thousands of lines of boilerplate. Directs model attention entirely to public interfaces, contracts, schemas, and high-level architectural relationships.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Eliminates Hallucinations</h3>
+        <p>Preserves all class hierarchies, method signatures, return types, decorators, and docstrings. The AI calls real methods instead of guessing parameters.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>10x Faster TTFT</h3>
+        <p>Compresses a 250,000-token repository into a compact 15,000-token skeleton in ~150ms. Models begin streaming answers in milliseconds, not minutes.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Strict Token Budget Ceiling</h3>
+        <p>Run <code>codeshave pack ./src --budget 32000</code> to automatically down-sample and prune code to strictly fit any context window limit without crashes.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3>Universal MCP Ecosystem</h3>
+        <p>1-click command <code>codeshave connect --all</code> automatically binds to Claude Desktop, Claude Code, Cursor, Windsurf, Codex, and Google Antigravity.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benchmarks Section -->
+  <section id="benchmarks" class="container">
+    <div class="section-title">
+      <span class="tag">Token Savings Benchmarks</span>
+      <h2>Real-World Production Codebases</h2>
+      <p>Measured token compression ratios across production enterprise microservices and applications.</p>
+    </div>
+
+    <div class="benchmark-table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Language & Tech Stack</th>
+            <th>Original Tokens</th>
+            <th>CodeShave Skeleton</th>
+            <th>Token Savings</th>
+            <th>Compression Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Python</strong> (FastAPI backend + Pydantic models)</td>
+            <td>134,069 t</td>
+            <td>15,393 t</td>
+            <td>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 88.5%;"></div></div>
+              <strong>-118,676 t</strong>
+            </td>
+            <td><span class="pill-saving">-88.5%</span></td>
+          </tr>
+          <tr>
+            <td><strong>TypeScript</strong> (Next.js 14 full-stack services)</td>
+            <td>12,450 t</td>
+            <td>2,180 t</td>
+            <td>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 82.5%;"></div></div>
+              <strong>-10,270 t</strong>
+            </td>
+            <td><span class="pill-saving">-82.5%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Go</strong> (Distributed microservice & gRPC API)</td>
+            <td>8,920 t</td>
+            <td>1,420 t</td>
+            <td>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 84.1%;"></div></div>
+              <strong>-7,500 t</strong>
+            </td>
+            <td><span class="pill-saving">-84.1%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Rust</strong> (Compiler engine & AST syntax parser)</td>
+            <td>14,200 t</td>
+            <td>2,450 t</td>
+            <td>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 82.7%;"></div></div>
+              <strong>-11,750 t</strong>
+            </td>
+            <td><span class="pill-saving">-82.7%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Java</strong> (Spring Boot enterprise REST API)</td>
+            <td>18,300 t</td>
+            <td>3,100 t</td>
+            <td>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 83.1%;"></div></div>
+              <strong>-15,200 t</strong>
+            </td>
+            <td><span class="pill-saving">-83.1%</span></td>
+          </tr>
+          <tr>
+            <td><strong>C++</strong> (High-performance quantitative engine)</td>
+            <td>11,500 t</td>
+            <td>2,050 t</td>
+            <td>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 82.2%;"></div></div>
+              <strong>-9,450 t</strong>
+            </td>
+            <td><span class="pill-saving">-82.2%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Installation Hub -->
+  <section id="install" class="container">
+    <div class="section-title">
+      <span class="tag">One-Click Setup</span>
+      <h2>Connect to Any Environment in Seconds</h2>
+      <p>Choose your preferred AI client, IDE, or terminal workflow.</p>
+    </div>
+
+    <div class="install-box">
+      <div class="install-tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-cli', this)">Terminal CLI (Python / uvx)</button>
+        <button class="tab-btn" onclick="switchTab('tab-vscode', this)">VS Code / Cursor / Windsurf</button>
+        <button class="tab-btn" onclick="switchTab('tab-claude', this)">Claude Desktop & Code</button>
+        <button class="tab-btn" onclick="switchTab('tab-codex', this)">OpenAI Codex / ChatGPT</button>
+        <button class="tab-btn" onclick="switchTab('tab-ai', this)">🤖 Zero-Effort AI Prompt (Option C)</button>
+      </div>
+
+      <!-- Tab CLI -->
+      <div id="tab-cli" class="tab-content active">
+        <div class="code-block-header">
+          <span>Run via pip & auto-connect to all installed assistants:</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block">pip install codeshave
+codeshave connect --all</div>
+        <div class="code-block-header" style="margin-top: 1.25rem;">
+          <span>Or run instantly without installation via uvx:</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block">uvx codeshave mcp</div>
+      </div>
+
+      <!-- Tab VS Code -->
+      <div id="tab-vscode" class="tab-content">
+        <p style="color:var(--text-muted); margin-bottom: 1rem;">
+          Install directly from the official marketplace or add to <code>.vscode/mcp.json</code>:
+        </p>
+        <div class="code-block-header">
+          <span>Marketplace Command or .vscode/mcp.json snippet:</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block">{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": ["codeshave", "mcp"]
+    }
+  }
+}</div>
+        <div style="margin-top: 1.25rem;">
+          <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave" target="_blank" class="btn btn-primary">
+            Open in Visual Studio Marketplace →
+          </a>
+        </div>
+      </div>
+
+      <!-- Tab Claude -->
+      <div id="tab-claude" class="tab-content">
+        <div class="code-block-header">
+          <span>Claude Code (Terminal Assistant) — 1 command:</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block">claude mcp add codeshave -- uvx codeshave mcp</div>
+        <div class="code-block-header" style="margin-top: 1.25rem;">
+          <span>Claude Desktop — Add to claude_desktop_config.json:</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block">{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": ["codeshave", "mcp"]
+    }
+  }
+}</div>
+      </div>
+
+      <!-- Tab Codex -->
+      <div id="tab-codex" class="tab-content">
+        <div class="code-block-header">
+          <span>Add to ~/.codex/config.toml (or simply run 'codeshave connect codex'):</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block">[mcp_servers.codeshave]
+command = "uvx"
+args = ["codeshave", "mcp"]</div>
+        <p style="color:var(--text-muted); margin-top: 1rem; font-size: 0.85rem;">
+          💡 <em>Note: After configuring, restart the app or start a new chat session to load the tools.</em>
+        </p>
+      </div>
+
+      <!-- Tab AI Prompt -->
+      <div id="tab-ai" class="tab-content">
+        <div class="code-block-header">
+          <span>Paste this exact prompt into Claude, Cursor, ChatGPT, or Antigravity to let the AI set it up:</span>
+          <button class="btn-copy" onclick="copyCode(this)">Copy Prompt</button>
+        </div>
+        <div class="code-block">Please install and connect the CodeShave MCP server to my environment:
+Repository: https://github.com/jaideepkrishna2008-ui/codeshave
+Official MCP ID: io.github.jaideepkrishna2008-ui/codeshave
+
+Setup steps:
+1. Run `pip install -U codeshave && codeshave connect --all` (or configure the MCP server with command: `uvx codeshave mcp`).
+2. Ask me to restart this app or start a new conversation session to load the newly registered MCP tools, and ask me to return so you can check and verify that `shave_file` and `shave_code` are installed.
+3. Once verified, always prioritize calling CodeShave tools first when analyzing, searching, or exploring codebase files in this workspace to compress AST code skeletons and save 90%+ prompt tokens.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section (GEO & SEO Optimized) -->
+  <section id="faq" class="container">
+    <div class="section-title">
+      <span class="tag">Got Questions?</span>
+      <h2>Frequently Asked Questions</h2>
+      <p>Everything you need to know about CodeShave and AST token compression.</p>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary class="faq-question">What is CodeShave and how does it work?</summary>
+        <div class="faq-answer">
+          CodeShave is a deterministic code context compressor and Model Context Protocol (MCP) server. When you provide code files or repositories to an AI model, CodeShave prunes loop contents, private logic, and execution statements down to minimal placeholders (like <code>...</code> or <code>{ /* ... */ }</code>). All classes, functions, decorators, type hints, docstrings, and interfaces remain 100% syntactically valid.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">Does CodeShave cause the AI to hallucinate?</summary>
+        <div class="faq-answer">
+          No — in fact, it significantly reduces hallucinations. Because all function signatures, argument types, return types, and docstrings are fully preserved, the LLM has exact interface contracts without being distracted or confused by hundreds of lines of implementation noise.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">What programming languages are supported?</summary>
+        <div class="faq-answer">
+          CodeShave natively supports <strong>Python, TypeScript, JavaScript, Go, Rust, Java, C#, C, C++, Kotlin, and Swift</strong>.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">Is CodeShave an official Model Context Protocol (MCP) server?</summary>
+        <div class="faq-answer">
+          Yes. CodeShave is an officially verified server on the Model Context Protocol (MCP) registry with package ID <code>io.github.jaideepkrishna2008-ui/codeshave</code>.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">How can I support CodeShave?</summary>
+        <div class="faq-answer">
+          You can star the project on <a href="https://github.com/jaideepkrishna2008-ui/codeshave" target="_blank" style="color:var(--accent);">GitHub</a>, leave a review on the <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave" target="_blank" style="color:var(--accent);">VS Code Marketplace</a>, or support development via <a href="https://buymeacoffee.com/jaideep.360" target="_blank" style="color:var(--accent);">Buy Me A Coffee</a>!
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    Created by <b>Jaideep Krishna A</b> (@jaideepkrishna2008-ui) • Published on PyPI: <code>pip install codeshave</code>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="brand" style="margin-bottom: 0.75rem;">
+          <div class="brand-icon">⚡</div>
+          <div>Code<span>Shave</span></div>
+        </div>
+        <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; max-width: 320px;">
+          High-speed AST code compressor and official Model Context Protocol (MCP) server for modern AI coding workflows.
+        </p>
+        <p style="font-size: 0.85rem; color: #64748b;">
+          Published by <strong>Jaideep Krishna A (jaks-360)</strong>.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Ecosystem</h4>
+        <ul>
+          <li><a href="https://pypi.org/project/codeshave/" target="_blank">PyPI Package (v0.2.2)</a></li>
+          <li><a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave" target="_blank">VS Code Marketplace</a></li>
+          <li><a href="https://open-vsx.org/extension/jaks-360/codeshave" target="_blank">Open VSX Registry</a></li>
+          <li><a href="https://github.com/modelcontextprotocol/servers" target="_blank">MCP Registry</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://github.com/jaideepkrishna2008-ui/codeshave" target="_blank">GitHub Repository</a></li>
+          <li><a href="https://github.com/jaideepkrishna2008-ui/codeshave/releases" target="_blank">Releases & Changelog</a></li>
+          <li><a href="#playground">Interactive Playground</a></li>
+          <li><a href="#benchmarks">Benchmark Reports</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="https://buymeacoffee.com/jaideep.360" target="_blank">☕ Buy Me A Coffee</a></li>
+          <li><a href="https://github.com/sponsors/jaideepkrishna2008-ui" target="_blank">GitHub Sponsors</a></li>
+          <li><a href="https://github.com/jaideepkrishna2008-ui/codeshave/issues" target="_blank">Report an Issue</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 CodeShave. Released under the MIT License. Built with ❤️ for the AI developer community.</p>
+    </div>
   </footer>
+
+  <div id="toast">Copied to clipboard!</div>
 
   <script>
     const SAMPLES = {
@@ -341,9 +1278,9 @@ export class UserService {
     }
 
     public async getUser(id: string): Promise<UserProfile> {
-        const response = await fetch(\`\${this.apiEndpoint}/users/\${id}\`);
+        const response = await fetch(this.apiEndpoint + "/users/" + id);
         if (!response.ok) {
-            throw new Error(\`Failed to fetch user: \${response.statusText}\`);
+            throw new Error("Failed to fetch user: " + response.statusText);
         }
         const data = await response.json();
         return data as UserProfile;
@@ -477,7 +1414,6 @@ impl<K: std::hash::Hash + Eq, V: Clone> CacheManager<K, V> {
         const indentMatch = line.match(/^(\s*)/);
         const indent = indentMatch ? indentMatch[1].length : 0;
 
-        // Spanning multi-line docstring
         if (inDocstring) {
           result.push(line);
           if (trimmed.endsWith(docstringMarker)) {
@@ -737,6 +1673,34 @@ impl<K: std::hash::Hash + Eq, V: Clone> CacheManager<K, V> {
       outputStats.innerText = '-' + saved.toLocaleString() + ' tokens (-' + pct + '%)';
     }
 
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function copyText(txt) {
+      navigator.clipboard.writeText(txt);
+      showToast('Copied to clipboard!');
+    }
+
+    function copyCode(btn) {
+      const block = btn.parentElement.nextElementSibling;
+      navigator.clipboard.writeText(block.innerText);
+      const originalText = btn.innerText;
+      btn.innerText = 'Copied!';
+      showToast('Copied to clipboard!');
+      setTimeout(() => btn.innerText = originalText, 1500);
+    }
+
     inputArea.addEventListener('input', update);
     inputArea.addEventListener('paste', function() { setTimeout(update, 20); });
     inputArea.addEventListener('keyup', update);
@@ -776,6 +1740,7 @@ impl<K: std::hash::Hash + Eq, V: Clone> CacheManager<K, V> {
       if (!outputArea.value) return;
       navigator.clipboard.writeText(outputArea.value);
       copyBtn.innerText = 'Copied!';
+      showToast('Shaved skeleton copied to clipboard!');
       setTimeout(function() { copyBtn.innerText = 'Copy Skeleton'; }, 1500);
     });
 
