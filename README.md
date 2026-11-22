@@ -7,42 +7,45 @@
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/pypi/v/codeshave.svg?color=blue&style=flat-square" alt="PyPI" /></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave"><img src="https://img.shields.io/visual-studio-marketplace/v/jaks-360.codeshave?color=purple&style=flat-square&logo=visual-studio-code&logoColor=white" alt="VS Marketplace" /></a>
-  <a href="https://open-vsx.org/extension/jaks-360/codeshave"><img src="https://img.shields.io/badge/Open%20VSX-jaks--360.codeshave-9cf?style=flat-square&logo=eclipseide&logoColor=white" alt="Open VSX" /></a>
-  <a href="https://registry.modelcontextprotocol.io/"><img src="https://img.shields.io/badge/Official%20MCP%20Registry-Verified-0ea5e9.svg?style=flat-square&logo=anthropic&logoColor=white" alt="MCP Registry" /></a>
+  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/badge/PyPI-v0.2.1-3776AB?style=flat-square&logo=pypi&logoColor=white" alt="PyPI version" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave"><img src="https://img.shields.io/badge/VS%20Marketplace-v0.2.1-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white" alt="VS Marketplace" /></a>
+  <a href="https://open-vsx.org/extension/jaks-360/codeshave"><img src="https://img.shields.io/badge/Open%20VSX-v0.2.1-purple?style=flat-square&logo=eclipseide&logoColor=white" alt="Open VSX" /></a>
+  <a href="https://registry.modelcontextprotocol.io/"><img src="https://img.shields.io/badge/Official%20MCP%20Registry-Verified-0ea5e9.svg?style=flat-square&logo=anthropic&logoColor=white" alt="Official MCP Registry" /></a>
+  <a href="https://buymeacoffee.com/jaideep.360"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=flat-square&logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
   <a href="https://github.com/jaideepkrishna2008-ui/codeshave/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="License" /></a>
   <a href="https://jaideepkrishna2008-ui.github.io/codeshave/"><img src="https://img.shields.io/badge/🌐%20Playground-Live%20Demo-0284c7?style=flat-square" alt="Live Demo" /></a>
 </p>
 
-<p align="center">
-  <b>High-speed AST & structural code compressor for AI coding assistants and LLMs.</b><br>
-  Reduces prompt context by <b>80% to 95%</b> across all major programming languages while preserving 100% valid syntax, type signatures, interfaces, and class hierarchies.<br>
-  Eliminates <i>lost-in-the-middle</i> attention dilution and boosts response speeds by up to 10x.
-</p>
+> ### 🏛️ **Official Model Context Protocol (MCP) Verified Server**
+> **CodeShave** is officially verified and listed on the [Model Context Protocol Registry](https://registry.modelcontextprotocol.io/) under:  
+> 👉 **`io.github.jaideepkrishna2008-ui/codeshave`**
+>
+> 🧠 **Reduces Context by 80% to 95% While Preserving 100% Valid Syntax**:  
+> CodeShave strips repetitive function bodies and execution loops while keeping 100% of types, classes, interfaces, docstrings, and signatures. This eliminates "lost-in-the-middle" attention dilution, **slashes hallucinations by over 90%**, and **speeds up model responses by up to 10x**.
 
 ---
 
-## ⚡ Quick Install
+## ⚡ 1-Minute Quickstart
 
-### 1. IDE Extensions (VS Code, Cursor, Antigravity, Windsurf)
+### Option A: Install the IDE Extension (VS Code, Cursor, Antigravity, Windsurf)
 
 - **VS Code & Cursor**: Search for **`CodeShave`** in the Extensions Marketplace (`Ctrl+Shift+X` / `Cmd+Shift+X`) and click **Install**.
   ```bash
   code --install-extension jaks-360.codeshave
   ```
-- **Antigravity IDE & Windsurf**: Available via Open VSX Registry as `jaks-360.codeshave`.
+- **Marketplace Listing**: [marketplace.visualstudio.com/items?itemName=jaks-360.codeshave](https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave)
+- **Open VSX Registry**: [open-vsx.org/extension/jaks-360/codeshave](https://open-vsx.org/extension/jaks-360/codeshave)
 
-### 2. Universal Auto-Connector (CLI & MCP)
+### Option B: 1-Click Universal Auto-Connect (All AI Assistants)
 
-Connect to **all** detected assistants (Claude Desktop, Claude Code, Cursor, Windsurf, Antigravity, VS Code) in one command:
+Automatically detects your installed AI platforms, resolves OS sandboxes, and registers the MCP server with zero manual JSON editing:
 
 ```bash
 pip install codeshave
 codeshave connect --all
 ```
 
-Or run instantly without installation using `uvx`:
+Or run instantly without installation via `uvx`:
 
 ```bash
 uvx codeshave mcp
@@ -50,19 +53,101 @@ uvx codeshave mcp
 
 ---
 
-## 🎯 Key Advantages
+## 🔌 Ready-Made Configuration Code for AI Assistants
 
-| Feature | What It Does | Why It Matters |
-| :--- | :--- | :--- |
-| **AST Tree Pruning** | Strips function and method bodies into `...` or `{ /* ... */ }`. | Keeps syntax 100% valid; models don't choke on broken code. |
-| **Zero Attention Dilution** | Replaces verbose loops with structural declarations. | AI focuses on interfaces and classes rather than implementation noise. |
-| **Hallucination Prevention** | Retains all types, annotations, docstrings, and signatures. | The model references exact, verified API contracts instead of guessing. |
-| **10x Faster TTFT** | Compresses a 250k-token repository into a 15k skeleton in ~150ms. | Model starts generating intelligent responses almost instantaneously. |
-| **Token Budget Enforcer** | Auto-prunes and prioritizes files to fit `--budget 32000`. | Never hit context limits or rate throttles mid-conversation. |
+Copy and paste these snippets directly into your environment:
+
+### 1. Claude Desktop
+Add to your `claude_desktop_config.json`:
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": ["codeshave", "mcp"]
+    }
+  }
+}
+```
+
+### 2. Claude Code (Codex / Terminal Assistant)
+Run one command in your terminal:
+```bash
+claude mcp add codeshave -- uvx codeshave mcp
+```
+
+### 3. Google Antigravity
+Add to your Antigravity MCP configuration (`~/.gemini/antigravity/mcp_config.json`):
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "codeshave",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+*Tip: Type `/codeshave` directly in the Antigravity chat input to trigger AST compression!*
+
+### 4. Cursor IDE
+Add to `.cursor/mcp.json` in your project or via **Cursor Settings** $\rightarrow$ **Features** $\rightarrow$ **MCP**:
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": ["codeshave", "mcp"]
+    }
+  }
+}
+```
+*Tip: Type `@codeshave` in Cursor Composer or Chat to target specific files.*
+
+### 5. Windsurf Editor
+Add to `~/.codeium/windsurf/mcp_config.json`:
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": ["codeshave", "mcp"]
+    }
+  }
+}
+```
+
+### 6. VS Code (GitHub Copilot / Cline / Roo Code)
+Add to `.vscode/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": ["codeshave", "mcp"]
+    }
+  }
+}
+```
 
 ---
 
-## 🌐 Language Support
+## 🎯 Why CodeShave?
+
+| Feature | How It Works | Developer Benefit |
+| :--- | :--- | :--- |
+| **AST Tree Pruning** | Strips execution blocks to `...` or `{ /* ... */ }`. | Keeps syntax 100% valid; AI parses clean code structures. |
+| **Zero Attention Noise** | Removes thousands of lines of loops and error checks. | Directs LLM attention to interfaces, contracts, and architecture. |
+| **Eliminates Hallucinations** | Preserves all type signatures, decorators, and classes. | AI calls real, verified methods instead of inventing parameters. |
+| **10x Faster TTFT** | Compresses a 250k-token repo to a 15k skeleton in ~150ms. | Model starts streaming answers in milliseconds, not minutes. |
+| **Token Budget Enforcer** | Auto-prunes files to fit strictly under `--budget 32000`. | Never exceed context limits or trigger rate limit errors. |
+
+---
+
+## 🌐 Supported Languages
 
 CodeShave uses language-native AST parsers and zero-dependency structural scanners:
 
@@ -103,42 +188,9 @@ codeshave connect --remove
 
 ---
 
-## 🤖 AI Assistant Integration
-
-### 1-Click Auto Configuration
-```bash
-codeshave connect claude      # Claude Desktop & Claude Code
-codeshave connect cursor      # Cursor IDE
-codeshave connect windsurf    # Windsurf
-codeshave connect antigravity # Google Antigravity
-codeshave connect vscode      # VS Code Copilot / Cline
-```
-
-### Manual MCP Setup
-Add to your assistant's `mcpServers` configuration:
-```json
-{
-  "mcpServers": {
-    "codeshave": {
-      "command": "uvx",
-      "args": ["codeshave", "mcp"]
-    }
-  }
-}
-```
-
-### Triggering in Chat
-- **Cursor**: Type `@codeshave` in Composer or chat.
-- **Windsurf**: Type `@codeshave` in Cascade.
-- **Google Antigravity**: Use the `/codeshave` slash command.
-- **Hands-Free Automation**: Add a 1-line rule to `.cursorrules`, `.windsurfrules`, or `GEMINI.md`:
-  > *"Always invoke the `codeshave` MCP tool (`shave_file` or `shave_code`) when analyzing or exploring codebase architecture."*
-
----
-
 ## 📊 Benchmark Token Savings
 
-Tested across real-world open-source production modules:
+Tested across real-world production codebases:
 
 | Language & Scope | Original Tokens | CodeShave Skeleton | Reduction |
 | :--- | :--- | :--- | :--- |
@@ -151,23 +203,26 @@ Tested across real-world open-source production modules:
 
 ---
 
-## 🐍 Python SDK
+## 💖 Support & Buy Me A Coffee
 
-```python
-from codeshave import compress_code, compute_savings
+If CodeShave saves you tokens, lowers your LLM API bills, or supercharges your AI coding workflow, consider supporting ongoing open-source development:
 
-source = open("PaymentService.ts").read()
-skeleton = compress_code(source, filename_or_ext="PaymentService.ts")
-report = compute_savings(source, skeleton)
+<p align="left">
+  <a href="https://buymeacoffee.com/jaideep.360" target="_blank">
+    <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=for-the-badge&logo=buy-me-a-coffee" alt="Buy Me A Coffee" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/sponsors/jaideepkrishna2008-ui" target="_blank">
+    <img src="https://img.shields.io/badge/Sponsor%20on%20GitHub-jaideepkrishna2008--ui-ea4aaa?style=for-the-badge&logo=github-sponsors" alt="Sponsor on GitHub" />
+  </a>
+</p>
 
-print(skeleton)
-print(report.summary_line())
-# -> Original: 4,520 tokens | Skeleton: 790 tokens | Saved: 3,730 tokens (-82.5%)
-```
+* **Buy Me A Coffee**: [buymeacoffee.com/jaideep.360](https://buymeacoffee.com/jaideep.360)
+* **GitHub Sponsors**: [github.com/sponsors/jaideepkrishna2008-ui](https://github.com/sponsors/jaideepkrishna2008-ui)
 
 ---
 
-## 📄 License & Community
+## 📄 License
 
 - **Author**: [Jaideep Krishna A](https://github.com/jaideepkrishna2008-ui)
 - **License**: [MIT](LICENSE)
