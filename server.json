@@ -7,12 +7,12 @@
     "url": "https://github.com/jaideepkrishna2008-ui/codeshave",
     "source": "github"
   },
-  "version": "0.2.0",
+  "version": "0.2.1",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "codeshave",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "transport": {
         "type": "stdio"
       }
