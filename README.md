@@ -1,5 +1,7 @@
 # CodeShave
 
+<!-- mcp-name: io.github.jaideepkrishna2008-ui/codeshave -->
+
 <p align="center">
   <img src="assets/banner.svg" alt="CodeShave Banner" width="100%">
 </p>
