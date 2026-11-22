@@ -3,6 +3,7 @@
   "displayName": "CodeShave: AST Code Compressor & MCP Server",
   "description": "High-speed AST code context compressor & 1-click MCP server for AI coding assistants (Claude, Cursor, Copilot, Antigravity). Saves 90%+ prompt tokens.",
   "version": "0.2.1",
+  "license": "MIT",
   "publisher": "jaks-360",
   "repository": {
     "type": "git",
