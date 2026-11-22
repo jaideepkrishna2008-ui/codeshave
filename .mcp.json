@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "codeshave": {
+      "command": "uvx",
+      "args": [
+        "codeshave",
+        "mcp"
+      ]
+    }
+  }
+}

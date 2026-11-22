@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "codeshave",
+  "displayName": "CodeShave",
+  "version": "0.2.1",
+  "description": "High-speed AST code compressor and context optimizer for AI coding assistants. Reduces prompt tokens by 80% to 95% while keeping 100% valid syntax, types, and class interfaces.",
+  "author": {
+    "name": "Jaideep Krishna A",
+    "email": "jaideepkrishna2008@gmail.com"
+  },
+  "homepage": "https://jaideepkrishna2008-ui.github.io/codeshave/",
+  "repository": "https://github.com/jaideepkrishna2008-ui/codeshave",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "mcp",
+    "ast",
+    "compressor",
+    "context-window",
+    "token-optimization",
+    "code-analysis"
+  ]
+}
