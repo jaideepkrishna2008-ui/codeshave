@@ -69,9 +69,9 @@ Repository: https://github.com/jaideepkrishna2008-ui/codeshave
 Official MCP ID: io.github.jaideepkrishna2008-ui/codeshave
 
 Setup steps:
-1. Run `pip install codeshave && codeshave connect --all` (or configure the MCP server with command: `uvx codeshave mcp`).
-2. Verify that `shave_file` and `shave_code` tools are available.
-3. When analyzing, searching, or exploring codebase files in this workspace, always prioritize calling CodeShave tools first to compress AST code skeletons and save 90%+ prompt tokens.
+1. Run `pip install -U codeshave && codeshave connect --all` (or configure the MCP server with command: `uvx codeshave mcp`).
+2. Ask me to restart this app or start a new conversation session to load the newly registered MCP tools, and ask me to return so you can check and verify that `shave_file` and `shave_code` are installed.
+3. Once verified, always prioritize calling CodeShave tools first when analyzing, searching, or exploring codebase files in this workspace to compress AST code skeletons and save 90%+ prompt tokens.
 ```
 
 > 💡 **Note**: AI assistants (including Codex / ChatGPT Desktop and Claude) load MCP servers on session startup. After running the setup command, **start a new chat session or restart the app** to activate the tools!
