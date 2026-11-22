@@ -25,6 +25,14 @@
 
 ---
 
+## ⚡ Live Terminal Demo
+
+<p align="center">
+  <img src="assets/terminal_recording.gif" alt="CodeShave Live Terminal Demo" width="100%">
+</p>
+
+---
+
 ## ⚡ 1-Minute Quickstart
 
 ### Option A: Install the IDE Extension (VS Code, Cursor, Antigravity, Windsurf)
@@ -49,6 +57,21 @@ Or run instantly without installation via `uvx`:
 
 ```bash
 uvx codeshave mcp
+```
+
+### Option C: 🤖 Ask Your AI to Install It For You (Zero-Effort Prompt)
+
+If you are new or prefer your AI assistant to handle setup automatically, copy and paste this exact prompt into **Claude**, **Cursor**, **Windsurf**, **Antigravity**, **ChatGPT**, or **Copilot**:
+
+```text
+Please install and connect the CodeShave MCP server to my environment:
+Repository: https://github.com/jaideepkrishna2008-ui/codeshave
+Official MCP ID: io.github.jaideepkrishna2008-ui/codeshave
+
+Setup steps:
+1. Run `pip install codeshave && codeshave connect --all` (or configure the MCP server with command: `uvx codeshave mcp`).
+2. Verify that `shave_file` and `shave_code` tools are available.
+3. When analyzing, searching, or exploring codebase files in this workspace, always prioritize calling CodeShave tools first to compress AST code skeletons and save 90%+ prompt tokens.
 ```
 
 ---
