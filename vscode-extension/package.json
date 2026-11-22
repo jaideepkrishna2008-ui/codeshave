@@ -1,0 +1,86 @@
+{
+  "name": "codeshave",
+  "displayName": "CodeShave: AST Code Compressor & MCP Server",
+  "description": "High-speed AST code context compressor & 1-click MCP server for AI coding assistants (Claude, Cursor, Copilot, Antigravity). Saves 90%+ prompt tokens.",
+  "version": "0.2.0",
+  "publisher": "jaks-360",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaideepkrishna2008-ui/codeshave"
+  },
+  "homepage": "https://jaideepkrishna2008-ui.github.io/codeshave/",
+  "icon": "assets/icon.svg",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Programming Languages",
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "mcp",
+    "ast",
+    "compressor",
+    "context",
+    "ai",
+    "claude",
+    "cursor",
+    "tokens"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeshave.compressFile",
+        "title": "CodeShave: Compress Current File to Clipboard",
+        "category": "CodeShave"
+      },
+      {
+        "command": "codeshave.compressSelection",
+        "title": "CodeShave: Compress Selection to Clipboard",
+        "category": "CodeShave"
+      },
+      {
+        "command": "codeshave.connectMCP",
+        "title": "CodeShave: Auto-Configure Local MCP Server",
+        "category": "CodeShave"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "codeshave.compressSelection",
+          "when": "editorHasSelection",
+          "group": "7_modification"
+        },
+        {
+          "command": "codeshave.compressFile",
+          "group": "7_modification"
+        }
+      ]
+    },
+    "mcpServers": {
+      "codeshave": {
+        "command": "uvx",
+        "args": [
+          "codeshave",
+          "mcp"
+        ]
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3"
+  }
+}

@@ -163,6 +163,32 @@ codeshave inspect ./src/services/billing.ts
 >
 > Run CodeShave anywhere with **zero installation** via `uvx codeshave mcp` or standard CLI.
 
+### ⚡ 1-Click Universal Auto-Connect (Zero Manual JSON Editing)
+
+CodeShave includes an intelligent auto-connector that scans your system for installed AI assistants, resolves OS-specific sandboxes (including Windows Store AppContainers), and registers the MCP server automatically:
+
+```bash
+# Connect to all detected AI assistants automatically (Claude, Cursor, Windsurf, Antigravity, VS Code)
+codeshave connect --all
+
+# Or connect to a specific assistant
+codeshave connect claude
+codeshave connect cursor
+codeshave connect windsurf
+codeshave connect antigravity
+codeshave connect vscode
+
+# Check live connection status across all assistants
+codeshave connect --status
+
+# Disconnect CodeShave if ever needed
+codeshave connect --remove
+```
+
+---
+
+### Manual Assistant Setup (If Preferred)
+
 ### 1. Claude Code (Codex / Terminal Assistant)
 
 Install directly with one terminal command:

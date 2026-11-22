@@ -16,6 +16,12 @@ from typing import List, Optional, Set
 
 from codeshave import __version__
 from codeshave.clipboard import copy_to_clipboard
+from codeshave.connect import (
+    check_target_status,
+    connect_target,
+    disconnect_target,
+    get_supported_targets,
+)
 from codeshave.estimator import compute_savings, estimate_tokens
 from codeshave.formatters import FileContextItem, format_bundle
 from codeshave.graph import DependencyResolver
@@ -383,6 +389,56 @@ def handle_inspect(args: argparse.Namespace) -> int:
     return 0
 
 
+def handle_connect(args: argparse.Namespace) -> int:
+    targets = get_supported_targets()
+    selected_targets = list(targets.values()) if args.target == "all" else [targets[args.target]]
+
+    if args.status:
+        sys.stdout.write("CodeShave AI Assistant Connections:\n")
+        sys.stdout.write("====================================\n")
+        for target in selected_targets:
+            statuses = check_target_status(target)
+            sys.stdout.write(f"\n[{target.display_name}]\n")
+            for path, exists, configured in statuses:
+                status_icon = "✓ Connected" if configured else ("○ Not configured" if exists else "✗ Not detected")
+                sys.stdout.write(f"  • {path}: {status_icon}\n")
+        return 0
+
+    if args.remove:
+        sys.stdout.write("Disconnecting CodeShave MCP:\n")
+        for target in selected_targets:
+            actions = disconnect_target(target, dry_run=args.dry_run)
+            for path, action in actions:
+                prefix = "[DRY-RUN] " if args.dry_run else ""
+                sys.stdout.write(f"  {prefix}✓ Removed from {target.display_name} ({path})\n")
+        return 0
+
+    cmd = getattr(args, "cmd", "uvx")
+    mcp_args = ["codeshave", "mcp"] if cmd == "uvx" else ["-m", "codeshave.mcp"]
+
+    sys.stdout.write(f"Connecting CodeShave MCP to AI assistants (Command: {cmd} {' '.join(mcp_args)}):\n")
+    sys.stdout.write("=========================================================================\n")
+
+    any_configured = False
+    for target in selected_targets:
+        actions = connect_target(target, command=cmd, args=mcp_args, dry_run=args.dry_run)
+        for path, action in actions:
+            prefix = "[DRY-RUN] " if args.dry_run else ""
+            if action in ("created", "updated"):
+                sys.stdout.write(f"  {prefix}✓ Configured {target.display_name}: {path}\n")
+                any_configured = True
+            elif action == "already-configured":
+                sys.stdout.write(f"  {prefix}✓ {target.display_name} already configured: {path}\n")
+                any_configured = True
+
+    if not any_configured:
+        sys.stdout.write("\nNo supported assistant directories were detected.\n")
+        return 1
+
+    sys.stdout.write("\n✨ Successfully connected! Restart your AI assistants to activate CodeShave.\n")
+    return 0
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="codeshave",
@@ -433,6 +489,20 @@ def main() -> None:
     # MCP command
     subparsers.add_parser("mcp", help="Launch Model Context Protocol (MCP) stdio server")
 
+    # Connect command
+    conn_p = subparsers.add_parser("connect", help="Automatically connect CodeShave to AI assistants (Claude, Cursor, Windsurf, etc.)")
+    conn_p.add_argument(
+        "target",
+        nargs="?",
+        default="all",
+        choices=["all", "claude", "cursor", "windsurf", "antigravity", "vscode"],
+        help="Target AI assistant to configure (default: all)",
+    )
+    conn_p.add_argument("--status", action="store_true", help="Display MCP connection status across all detected clients")
+    conn_p.add_argument("--remove", action="store_true", help="Remove CodeShave from the target assistant(s)")
+    conn_p.add_argument("--dry-run", action="store_true", help="Preview configuration changes without writing to disk")
+    conn_p.add_argument("--cmd", default="uvx", help="MCP server execution command (default: uvx)")
+
     args = parser.parse_args()
 
     if args.command == "pack":
@@ -445,6 +515,8 @@ def main() -> None:
         sys.exit(handle_inspect(args))
     elif args.command == "mcp":
         run_mcp_server()
+    elif args.command == "connect":
+        sys.exit(handle_connect(args))
 
 
 if __name__ == "__main__":

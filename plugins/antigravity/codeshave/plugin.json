@@ -1,0 +1,14 @@
+{
+  "name": "codeshave",
+  "displayName": "CodeShave",
+  "description": "High-speed AST code compressor & MCP server for AI coding assistants. Reduces prompt tokens by 80-95% while preserving 100% valid syntax, interfaces, and types.",
+  "version": "0.2.0",
+  "logo": "assets/logo.svg",
+  "author": {
+    "name": "Jaideep Krishna A",
+    "url": "https://github.com/jaideepkrishna2008-ui/codeshave"
+  },
+  "homepage": "https://jaideepkrishna2008-ui.github.io/codeshave/",
+  "repository": "https://github.com/jaideepkrishna2008-ui/codeshave",
+  "license": "MIT"
+}

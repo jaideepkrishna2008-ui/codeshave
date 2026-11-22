@@ -1,0 +1,30 @@
+{
+  "$schema": "https://anthropic.com/schemas/claude-plugin.json",
+  "name": "codeshave",
+  "displayName": "CodeShave",
+  "version": "0.2.0",
+  "description": "High-speed AST code compressor and MCP server for Claude. Reduces code prompt tokens by 90%+ while preserving 100% valid AST structure, types, and class interfaces.",
+  "author": {
+    "name": "Jaideep Krishna A",
+    "email": "jaideepkrishna2008@gmail.com",
+    "url": "https://github.com/jaideepkrishna2008-ui/codeshave"
+  },
+  "icon": "assets/icon.svg",
+  "homepage": "https://jaideepkrishna2008-ui.github.io/codeshave/",
+  "repository": "https://github.com/jaideepkrishna2008-ui/codeshave",
+  "mcp": {
+    "type": "stdio",
+    "command": "uvx",
+    "args": ["codeshave", "mcp"]
+  },
+  "tools": [
+    {
+      "name": "shave_code",
+      "description": "Compress raw source code into an AST skeleton, stripping execution bodies while preserving classes, methods, docstrings, and type signatures."
+    },
+    {
+      "name": "shave_file",
+      "description": "Read a file from disk and return its compressed AST skeleton."
+    }
+  ]
+}
