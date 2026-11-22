@@ -13,7 +13,7 @@
   <a href="https://registry.modelcontextprotocol.io/"><img src="https://img.shields.io/badge/Official%20MCP%20Registry-Verified-0ea5e9.svg?style=flat-square&logo=anthropic&logoColor=white" alt="Official MCP Registry" /></a>
   <a href="https://buymeacoffee.com/jaideep.360"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=flat-square&logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
   <a href="https://github.com/jaideepkrishna2008-ui/codeshave/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="License" /></a>
-  <a href="https://codeshave.netlify.app/"><img src="https://img.shields.io/badge/Website-codeshave.netlify.app-00C7B7?style=flat-square&logo=netlify&logoColor=white" alt="Live Website" /></a>
+  <a href="https://codeshave.netlify.app/"><img src="https://img.shields.io/badge/Website-codeshave.netlify.app-0e7490?style=flat-square&logo=netlify&logoColor=white" alt="Live Website" /></a>
   <a href="https://codeshave.netlify.app/#playground"><img src="https://img.shields.io/badge/🌐%20Playground-Live%20Demo-0284c7?style=flat-square" alt="Live Demo" /></a>
 </p>
 
@@ -31,6 +31,15 @@
 <p align="center">
   <img src="assets/terminal_recording.gif" alt="CodeShave Live Terminal Demo" width="100%">
 </p>
+
+<p align="center">
+  <a href="https://codeshave.netlify.app/#playground">
+    <img src="https://img.shields.io/badge/🚀%20Live%20Web%20Demo-Try%20in%20Browser-0e7490?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Try Live Demo in Browser" />
+  </a>
+</p>
+
+> 🌐 **Try CodeShave Live in Your Browser**:  
+> No installation required! Test AST compression and live token reduction on your own code with the interactive playground at **[codeshave.netlify.app/#playground](https://codeshave.netlify.app/#playground)**.
 
 ---
 
