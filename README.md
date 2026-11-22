@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/badge/PyPI-v0.2.1-3776AB?style=flat-square&logo=pypi&logoColor=white" alt="PyPI version" /></a>
+  <a href="https://pypi.org/project/codeshave/"><img src="https://img.shields.io/badge/PyPI-v0.2.2-3776AB?style=flat-square&logo=pypi&logoColor=white" alt="PyPI version" /></a>
   <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave"><img src="https://img.shields.io/badge/VS%20Marketplace-v0.2.1-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white" alt="VS Marketplace" /></a>
   <a href="https://open-vsx.org/extension/jaks-360/codeshave"><img src="https://img.shields.io/badge/Open%20VSX-v0.2.1-purple?style=flat-square&logo=eclipseide&logoColor=white" alt="Open VSX" /></a>
   <a href="https://registry.modelcontextprotocol.io/"><img src="https://img.shields.io/badge/Official%20MCP%20Registry-Verified-0ea5e9.svg?style=flat-square&logo=anthropic&logoColor=white" alt="Official MCP Registry" /></a>
@@ -73,6 +73,8 @@ Setup steps:
 2. Verify that `shave_file` and `shave_code` tools are available.
 3. When analyzing, searching, or exploring codebase files in this workspace, always prioritize calling CodeShave tools first to compress AST code skeletons and save 90%+ prompt tokens.
 ```
+
+> 💡 **Note**: AI assistants (including Codex / ChatGPT Desktop and Claude) load MCP servers on session startup. After running the setup command, **start a new chat session or restart the app** to activate the tools!
 
 ---
 
@@ -155,6 +157,15 @@ Add to `.vscode/mcp.json`:
   }
 }
 ```
+
+### 7. OpenAI Codex / ChatGPT Desktop
+Add to `~/.codex/config.toml`:
+```toml
+[mcp_servers.codeshave]
+command = "uvx"
+args = ["codeshave", "mcp"]
+```
+*(Or simply run `codeshave connect codex`)*
 
 ---
 

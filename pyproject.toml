@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codeshave"
-version = "0.2.1"
+version = "0.2.2"
 description = "Universal AST & structural code context compressor for AI coding assistants and LLMs (Python, TypeScript, Go, Rust, Java, C++, etc.)"
 authors = [{ name = "Jaideep Krishna A", email = "jaideepkrishna2008@gmail.com" }]
 readme = "README.md"

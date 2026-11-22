@@ -391,7 +391,8 @@ def handle_inspect(args: argparse.Namespace) -> int:
 
 def handle_connect(args: argparse.Namespace) -> int:
     targets = get_supported_targets()
-    selected_targets = list(targets.values()) if args.target == "all" else [targets[args.target]]
+    target_key = "all" if (getattr(args, "all", False) or not args.target or args.target == "all") else args.target
+    selected_targets = list(targets.values()) if target_key == "all" else [targets[target_key]]
 
     if args.status:
         sys.stdout.write("CodeShave AI Assistant Connections:\n")
@@ -440,6 +441,18 @@ def handle_connect(args: argparse.Namespace) -> int:
 
 
 def main() -> None:
+    if sys.platform == "win32":
+        if hasattr(sys.stdout, "reconfigure"):
+            try:
+                sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+        if hasattr(sys.stderr, "reconfigure"):
+            try:
+                sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
     parser = argparse.ArgumentParser(
         prog="codeshave",
         description="⚡ CodeShave: Universal AST & structural code context compressor for AI coding assistants.",
@@ -490,14 +503,15 @@ def main() -> None:
     subparsers.add_parser("mcp", help="Launch Model Context Protocol (MCP) stdio server")
 
     # Connect command
-    conn_p = subparsers.add_parser("connect", help="Automatically connect CodeShave to AI assistants (Claude, Cursor, Windsurf, etc.)")
+    conn_p = subparsers.add_parser("connect", help="Automatically connect CodeShave to AI assistants (Claude, Cursor, Windsurf, Codex, etc.)")
     conn_p.add_argument(
         "target",
         nargs="?",
-        default="all",
-        choices=["all", "claude", "cursor", "windsurf", "antigravity", "vscode"],
+        default=None,
+        choices=["all", "claude", "cursor", "windsurf", "antigravity", "vscode", "codex"],
         help="Target AI assistant to configure (default: all)",
     )
+    conn_p.add_argument("--all", action="store_true", help="Connect to all detected AI assistants (default)")
     conn_p.add_argument("--status", action="store_true", help="Display MCP connection status across all detected clients")
     conn_p.add_argument("--remove", action="store_true", help="Remove CodeShave from the target assistant(s)")
     conn_p.add_argument("--dry-run", action="store_true", help="Preview configuration changes without writing to disk")

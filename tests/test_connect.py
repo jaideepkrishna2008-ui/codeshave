@@ -76,3 +76,33 @@ def test_disconnect_target(tmp_path: Path):
     disconnect_target(target)
     status_after = check_target_status(target)
     assert status_after[0][2] is False  # not configured
+
+
+def test_connect_and_disconnect_toml_codex(tmp_path: Path):
+    cfg_file = tmp_path / "config.toml"
+    cfg_file.write_text('model = "gpt-5.4"\n\n[mcp_servers.existing]\ncommand = "test"\nargs = []\n', encoding="utf-8")
+
+    target = ClientTarget("codex", "Codex / ChatGPT", [cfg_file], config_format="toml")
+    
+    # 1. Check initial status
+    status = check_target_status(target)
+    assert status[0][1] is True  # exists
+    assert status[0][2] is False  # not configured
+
+    # 2. Connect
+    actions = connect_target(target, command="uvx", args=["codeshave", "mcp"])
+    assert actions[0][1] == "updated"
+    assert "[mcp_servers.codeshave]" in cfg_file.read_text(encoding="utf-8")
+    assert check_target_status(target)[0][2] is True
+
+    # 3. Idempotent connect
+    actions2 = connect_target(target, command="uvx", args=["codeshave", "mcp"])
+    assert actions2[0][1] == "already-configured"
+
+    # 4. Disconnect
+    dis_actions = disconnect_target(target)
+    assert dis_actions[0][1] == "removed"
+    assert "[mcp_servers.codeshave]" not in cfg_file.read_text(encoding="utf-8")
+    assert "[mcp_servers.existing]" in cfg_file.read_text(encoding="utf-8")
+    assert check_target_status(target)[0][2] is False
+

@@ -14,7 +14,7 @@ from codeshave.estimator import estimate_tokens, compute_savings
 from codeshave.graph import DependencyResolver
 from codeshave.formatters import format_bundle
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __all__ = [
     "compress_code",
     "compress_source",

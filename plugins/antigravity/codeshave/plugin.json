@@ -2,7 +2,7 @@
   "name": "codeshave",
   "displayName": "CodeShave",
   "description": "High-speed AST code compressor & MCP server for AI coding assistants. Reduces prompt tokens by 80-95% while preserving 100% valid syntax, interfaces, and types.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "logo": "assets/logo.svg",
   "author": {
     "name": "Jaideep Krishna A",
