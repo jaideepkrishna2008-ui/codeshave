@@ -21,12 +21,12 @@
 > **CodeShave** is officially verified and listed on the [Model Context Protocol Registry](https://registry.modelcontextprotocol.io/) under:  
 > 👉 **`io.github.jaideepkrishna2008-ui/codeshave`**
 >
-> 🧠 **Reduces Context by 80% to 95% While Preserving 100% Valid Syntax**:  
+>  **Reduces Context by 80% to 95% While Preserving 100% Valid Syntax**:  
 > CodeShave strips repetitive function bodies and execution loops while keeping 100% of types, classes, interfaces, docstrings, and signatures. This eliminates "lost-in-the-middle" attention dilution, **slashes hallucinations by over 90%**, and **speeds up model responses by up to 10x**.
 
 ---
 
-## ⚡ Live Terminal Demo
+##  Live Terminal Demo
 
 <p align="center">
   <img src="assets/terminal_recording.gif" alt="CodeShave Live Terminal Demo" width="100%">
@@ -38,12 +38,12 @@
   </a>
 </p>
 
-> 🌐 **Try CodeShave Live in Your Browser**:  
+>  **Try CodeShave Live in Your Browser**:  
 > No installation required! Test AST compression and live token reduction on your own code with the interactive playground at **[codeshave.netlify.app/#playground](https://codeshave.netlify.app/#playground)**.
 
 ---
 
-## ⚡ 1-Minute Quickstart
+##  1-Minute Quickstart
 
 ### Option A: Install the IDE Extension (VS Code, Cursor, Antigravity, Windsurf)
 
@@ -69,7 +69,7 @@ Or run instantly without installation via `uvx`:
 uvx codeshave mcp
 ```
 
-### Option C: 🤖 Ask Your AI to Install It For You (Zero-Effort Prompt)
+### Option C:  Ask Your AI to Install It For You (Zero-Effort Prompt)
 
 If you are new or prefer your AI assistant to handle setup automatically, copy and paste this exact prompt into **Claude**, **Cursor**, **Windsurf**, **Antigravity**, **ChatGPT**, or **Copilot**:
 
@@ -88,7 +88,7 @@ Setup steps:
 
 ---
 
-## 🔌 Ready-Made Configuration Code for AI Assistants
+##  Ready-Made Configuration Code for AI Assistants
 
 Copy and paste these snippets directly into your environment:
 
@@ -179,7 +179,7 @@ args = ["codeshave", "mcp"]
 
 ---
 
-## 🎯 Why CodeShave?
+##  Why CodeShave?
 
 | Feature | How It Works | Developer Benefit |
 | :--- | :--- | :--- |
@@ -191,7 +191,7 @@ args = ["codeshave", "mcp"]
 
 ---
 
-## 🌐 Supported Languages
+##  Supported Languages
 
 CodeShave uses language-native AST parsers and zero-dependency structural scanners:
 
@@ -208,7 +208,7 @@ CodeShave uses language-native AST parsers and zero-dependency structural scanne
 
 ---
 
-## 💻 CLI Commands
+##  CLI Commands
 
 ```bash
 # 📋 Compress and copy directly to your OS clipboard (ready to paste into ChatGPT/Claude)
@@ -232,7 +232,7 @@ codeshave connect --remove
 
 ---
 
-## 📊 Benchmark Token Savings
+##  Benchmark Token Savings
 
 Tested across real-world production codebases:
 
