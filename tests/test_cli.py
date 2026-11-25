@@ -74,6 +74,13 @@ def test_mcp_tools():
     names = [t["name"] for t in tools]
     assert "shave_code" in names
     assert "shave_file" in names
+    for tool in tools:
+        ann = tool.get("annotations")
+        assert isinstance(ann, dict)
+        assert ann["readOnlyHint"] is True
+        assert ann["destructiveHint"] is False
+        assert ann["idempotentHint"] is True
+        assert ann["openWorldHint"] is False
 
     # Call shave_code
     res = handle_call_tool({

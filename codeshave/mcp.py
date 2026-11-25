@@ -14,6 +14,14 @@ from codeshave.estimator import compute_savings
 from codeshave.languages import compress_code, detect_language
 
 
+_READ_ONLY_TOOL_ANNOTATIONS: Dict[str, bool] = {
+    "readOnlyHint": True,
+    "destructiveHint": False,
+    "idempotentHint": True,
+    "openWorldHint": False,
+}
+
+
 def create_tool_definitions() -> list[Dict[str, Any]]:
     return [
         {
@@ -23,6 +31,7 @@ def create_tool_definitions() -> list[Dict[str, Any]]:
                 "(classes, methods, type signatures, interfaces, docstrings) while stripping internal execution loops. "
                 "Saves 80-95% prompt tokens. Supports Python, TypeScript, JavaScript, Go, Rust, Java, C++, C#, etc."
             ),
+            "annotations": dict(_READ_ONLY_TOOL_ANNOTATIONS),
             "inputSchema": {
                 "type": "object",
                 "properties": {
@@ -52,6 +61,7 @@ def create_tool_definitions() -> list[Dict[str, Any]]:
                 "Returns the full syntactically valid structural skeleton with 80-95% token savings "
                 "so the context window does not get flooded with implementation details."
             ),
+            "annotations": dict(_READ_ONLY_TOOL_ANNOTATIONS),
             "inputSchema": {
                 "type": "object",
                 "properties": {
