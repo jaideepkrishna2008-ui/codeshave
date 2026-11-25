@@ -11,6 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=jaks-360.codeshave"><img src="https://img.shields.io/badge/VS%20Marketplace-v0.2.1-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white" alt="VS Marketplace" /></a>
   <a href="https://open-vsx.org/extension/jaks-360/codeshave"><img src="https://img.shields.io/badge/Open%20VSX-v0.2.1-purple?style=flat-square&logo=eclipseide&logoColor=white" alt="Open VSX" /></a>
   <a href="https://registry.modelcontextprotocol.io/"><img src="https://img.shields.io/badge/Official%20MCP%20Registry-Verified-0ea5e9.svg?style=flat-square&logo=anthropic&logoColor=white" alt="Official MCP Registry" /></a>
+  <a href="https://glama.ai/mcp/servers/jaideepkrishna2008-ui/codeshave"><img src="https://glama.ai/mcp/servers/jaideepkrishna2008-ui/codeshave/badges/score.svg" alt="jaideepkrishna2008-ui/codeshave MCP server" /></a>
   <a href="https://buymeacoffee.com/jaideep.360"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-jaideep.360-orange?style=flat-square&logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
   <a href="https://github.com/jaideepkrishna2008-ui/codeshave/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="License" /></a>
   <a href="https://codeshave.netlify.app/"><img src="https://img.shields.io/badge/Website-codeshave.netlify.app-0e7490?style=flat-square&logo=netlify&logoColor=white" alt="Live Website" /></a>
